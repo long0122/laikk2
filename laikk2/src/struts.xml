@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="false"/>
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<!--全局跳转 -->
+	<package name="myDefault" extends="struts-default">
+		<interceptors>
+			<interceptor name="MyInterceptor" class="com.lkk.web.interceptor.MyInterceptor"></interceptor>
+			<interceptor-stack name="myInterceptorStack">
+				<interceptor-ref name="MyInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<global-results>
+			<result name="success" type="redirect">/admin/success.jsp?backUrl=${backUrl}
+			</result>
+			<result name="fail">/admin/fail.jsp</result>
+			<result name="message">/admin/message.jsp</result>
+		</global-results>
+	</package>
+	<!-- ===================后台====================== -->
+	<package name="admin" extends="myDefault" namespace="/system">
+		
+	</package>
+
+
+	<!-- ===============前台====================== -->
+	<package name="index" extends="myDefault" namespace="/main">
+		<!-- 首页 -->
+		<action name="index" class="index">
+			<result name="indexPage">/index/main.jsp</result>
+			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
+		</action>
+		
+	</package>
+
+
+
+
+	<!--  ======================ajax ========================-->
+	<!--  ajax模块 -->
+	<package name="ajax" extends="json-default">
+		<action name="ajax" class="ajax">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		<action name="AdInput" class="AdInput">
+			<result type="json" />
+			<!-- 	<param name="root">result</param>  -->
+		</action>
+	</package>
+
+</struts>
+	
