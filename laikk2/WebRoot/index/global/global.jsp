@@ -17,7 +17,7 @@
 <script src="<%=basePath_%>index/js/init.js" type="text/javascript"></script>
 <script src="<%=basePath_%>index/jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
 
-<!-- my js 
-<script src="<%=basePath_%>index/js/global/global.js"></script> 
--->
+<!-- my js -->
+<script src="<%=basePath_%>index/js/global.js"></script> 
+
 

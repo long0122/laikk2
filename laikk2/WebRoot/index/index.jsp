@@ -27,14 +27,18 @@
     <div style="padding:26px 0;">
       <div class="ui-grid-c ui-top-icon">
         <div class="ui-block-a"><span><a href="category.html"><img src="${basePath}index/images/index_home1.png"></a></span></div>
-        <div class="ui-block-b"><span><a href="login.html"><img src="${basePath}index/images/index_home2.png"></a></span></div>
+        <div class="ui-block-b"><span><a href="#" onclick="showLogin()"><img src="${basePath}index/images/index_home2.png"></a></span></div>
         <div class="ui-block-c"><span><a href="${basePath}main/index!gotoReg"><img src="${basePath}index/images/index_home3.png"></a></span></div>
         <div class="ui-block-d"><a href="city.html"><img src="${basePath}index/images/index_home4.png"></a></div>
       </div>
       <div class="ui-grid-c">
         <div class="ui-block-a"><a href="category.html">商品分类</a></div>
-        <div class="ui-block-b"><a href="login.html">登录</a></div>
-        <div class="ui-block-c"><a href="${basePath}main/index!gotoReg">免费注册</a></div>
+        <div class="ui-block-b"> <c:if test="${userIndex==null}"><a href="#" onclick="showLogin()">登录</a></c:if>
+        <c:if test="${userIndex!=null}"><a href="${basePath}main/unit!unitIndex">企业管理</a></c:if>
+        </div>
+        <div class="ui-block-c"><c:if test="${userIndex==null}"><a href="${basePath}main/index!gotoReg">免费注册</a></c:if>
+         <c:if test="${userIndex!=null}"><a href="${basePath}main/login!logoutIndex"  data-ajax="false" onclick="return confirm('您确定注销吗?')">注销登录</a></c:if>
+        </div>
         <div class="ui-block-d"><a href="city.html">代理加盟</a></div>
       </div>
     </div>

@@ -12,10 +12,11 @@
 	<!--  onLoad="setup()" -->
 	<body>
 		<div data-role="page" id="regPage" class="page">
-					<script type="text/javascript">
+		<script type="text/javascript" src="${basePath}index/js/city.js"></script>
+			<script type="text/javascript">
 	$("#regPage").live("pageshow", function() {
 		//setup();
-	});
+		});
 </script>
 
 			<div class="home_top">
@@ -34,68 +35,74 @@
 				<span>企业注册<a href="#"><img
 							src="${basePath}index/images/icon_register.png"> </a> </span>
 			</div>
-				<form id="unitAddForm" action="${basePath}main/unit!add" method="post"  enctype="multipart/form-data" data-ajax="false">
-			<div class="res_text">
-				<dl>
-					<dt>
-						<input type="text" name="username" placeholder="用户名">
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<dl>
-					<dt>
-						<input type="password" name="password" placeholder="密码">
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<dl>
-					<dt>
-						<input type="password" name="password2" placeholder="确认密码">
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<dl>
-					<dt>
-					
-						<input type="text" placeholder="企业名称" name="name" >
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<dl>
-					<dt>企业logo:
-					<input type="file" name="logo" id="logo"/>
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-			
-				<dl>
-					<dt>公众平台二维码:
-					<input type="file" name="public2dBarcode">
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-					
-				<dl>
-					<dt>企业二维码:
-					<input type="file" name="unit2dBarcode">
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
+			<form id="unitAddForm" action="${basePath}main/unit!add"
+				method="post" enctype="multipart/form-data" data-ajax="false">
+				<div class="res_text">
 					<dl>
-					<dt>企业营业执照:
-					<input type="file" name="busLicense">
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				
+						<dt>
+							<input type="text" name="username" placeholder="用户名">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<dl>
+						<dt>
+							<input type="password" name="password" placeholder="密码">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<dl>
+						<dt>
+							<input type="password" name="password2" placeholder="确认密码">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<dl>
+						<dt>
+
+							<input type="text" placeholder="企业名称" name="name">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<!-- 
+					<dl>
+						<dt>
+							<label for="logo">
+								企业logo:
+							</label>
+							<input type="file" name="logo" id="logo" />
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+
+					<dl>
+						<dt>
+							<label for="public2dBarcode">
+								公众平台二维码:
+							</label>
+							<input type="file" name="public2dBarcode" id="public2dBarcode">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+
+					<dl>
+						<dt>
+							<label for="unit2dBarcode">
+								企业二维码:
+							</label>
+							<input type="file" name="unit2dBarcode">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					 -->
+					
+
 					<!-- 
 				<dl class="res_upload">
 					<dt>
@@ -155,57 +162,93 @@
 					<div class="cl"></div>
 				</dl>
 				 -->
-				<dl>
-					<dt>
-						<input type="text" placeholder="身份证" name="idCard">
-						<span class="red">*</span>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<dl>
-					<dt>
-						<select name="category">
-							<option value="-1">
-								商户分类
-							</option>
+					<dl>
+						<dt>
+							<input type="text" placeholder="身份证" name="idCard">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<dl>
+						<dt>
+							<select name="category">
+								<option value="-1">
+									商户分类
+								</option>
 								<c:forEach items="${categoryList}" var="cInfo">
-								<optgroup label="${cInfo.category.name}">
-									<c:if test="${!empty cInfo.childrenList}">
-										<c:forEach items="${cInfo.childrenList}" var="c">
-											<option value="${c.id }">
-												${c.name}
-											</option>
-										</c:forEach>
+									<optgroup label="${cInfo.category.name}">
+										<c:if test="${!empty cInfo.childrenList}">
+											<c:forEach items="${cInfo.childrenList}" var="c">
+												<option value="${c.id }">
+													${c.name}
+												</option>
+											</c:forEach>
 
-									</c:if>
+										</c:if>
 
-								</optgroup>
+									</optgroup>
+								</c:forEach>
+							</select>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<dl style="width: 46%;" class="fl">
+						<dt>
+							<s:select list="provinceList" name="province"
+								listKey="provinceId" listValue="province" headerKey=""
+								headerValue="省份" onchange="selectCity(this.value)" />
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<dl style="width: 46%;" class="fr">
+						<dt>
+							<select id="city" name="city">
+								<option value="">
+									地级市
+								</option>
+							</select>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<div class="cl"></div>
+					
+					<dl>
+						<fieldset data-role="controlgroup"  data-type="horizontal">
+							<legend>
+								套餐选择:
+							</legend>
+							<c:forEach items="${levelList}" var="l" varStatus="s">
+								<input type="radio" name="level" id="level${s.index}"
+									value="${l.code}"
+									<c:if test="${s.index==0}">checked="checked"</c:if>>
+								<label for="level${s.index}">
+									${l.name}
+								</label>
 							</c:forEach>
-						</select>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<dl style="width: 46%;" class="fl">
-					<dt>
-						<select id="s1">
-							<option value="">
-								省份
-							</option>
-						</select>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<dl style="width: 46%;" class="fr">
-					<dt>
-						<select id="s2" name="city">
-							<option value="">
-								地级市
-							</option>
-						</select>
-					</dt>
-					<div class="cl"></div>
-				</dl>
-				<div class="cl"></div>
+						</fieldset>
+					</dl>
+					<dl>
+							<legend>
+								企业营业执照:
+							</legend>
+						<dt>
+							
+							<input type="file" name="busLicense">
+							<span class="red">*</span>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+					<!-- 				
+        <input type="radio" name="radio-choice-1" id="radio-choice-1" value="choice-1" checked="checked">
+        <label for="radio-choice-1">Cat</label>
+        <input type="radio" name="radio-choice-1" id="radio-choice-2" value="choice-2">
+        <label for="radio-choice-2">Dog</label>
+        <input type="radio" name="radio-choice-1" id="radio-choice-3" value="choice-3">
+        <label for="radio-choice-3">Hamster</label>
+        <input type="radio" name="radio-choice-1" id="radio-choice-4" value="choice-4">
+        <label for="radio-choice-4">Lizard</label>-->
+					</fieldset>
+					<!-- 
 				<dl>
 					<p style="font-size: 0.8em;">
 						套餐选择：
@@ -243,14 +286,15 @@
 						<div class="cl"></div>
 					</ul>
 				</dl>
-				<div class="res_btn">
-					<input type="submit" value="注册">
+				 -->
+					<div class="res_btn">
+						<input type="submit" value="注册">
+					</div>
+					<div class="res_red">
+						<span>*</span>为必填选项，如需帮助可查看
+						<a href="#">帮助说明</a>
+					</div>
 				</div>
-				<div class="res_red">
-					<span>*</span>为必填选项，如需帮助可查看
-					<a href="#">帮助说明</a>
-				</div>
-			</div>
 			</form>
 			<%@ include file="./global/footer.jsp"%>
 		</div>

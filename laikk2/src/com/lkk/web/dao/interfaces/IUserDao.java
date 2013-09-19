@@ -23,6 +23,13 @@ public interface IUserDao extends IBasicDao<User, Serializable>{
 	 */
 	public boolean isExist(String name, String password);
 	/**
+	 * 通过用户密码查找用户
+	 * @param name
+	 * @param password
+	 * @return
+	 */
+	public User loadByCodePwd(String name, String password);
+	/**
 	 * 通过用户名查找
 	 * @param name
 	 * @return

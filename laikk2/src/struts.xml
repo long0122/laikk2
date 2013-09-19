@@ -20,7 +20,7 @@
 			</result>
 			<result name="fail">/admin/fail.jsp</result>
 			<result name="message">/admin/message.jsp</result>
-			<result name="indexMsg">/index/msg.jsp</result>
+			<result name="indexMsg">/index/global/msg.jsp</result>
 		</global-results>
 	</package>
 	<!-- ===================后台====================== -->
@@ -39,17 +39,25 @@
 		</action>
 		<!-- 企业 -->
 		<action name="unit" class="unitIndex">
-			<result name="indexAddr">/index/basic/unitAddr.jsp</result>
-			<!-- <interceptor-ref name="fileUpload">
-				<param name="maximumSize">102400</param>
-				<param name="allowedTypes">image/bmp,image/png,image/gif,image/jpg</param>
-			</interceptor-ref> -->
+			<result name="unitIndex">/index/unit/unitIndex.jsp</result>
 			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
 		</action>
 	</package>
 
 
-
+	<!--  ======================login ========================-->
+	<package name="login" extends="myDefault">
+		<!-- 登陆 -->
+		<action name="login" class="login">
+			<result name="main">/admin/main.html</result>
+			<result name="logout">/admin/login/login.jsp</result>
+			 <result name="index" type="redirectAction">
+         			 	 <param name="namespace">/main</param>
+				         <param name="actionName">index</param>
+			</result>
+			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
+		</action>
+	</package>
 
 	<!--  ======================ajax ========================-->
 	<!--  ajax模块 -->

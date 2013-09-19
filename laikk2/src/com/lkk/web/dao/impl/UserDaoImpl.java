@@ -81,5 +81,11 @@ public class UserDaoImpl extends BasicDaoImpl<User, String> implements IUserDao 
 				.intValue();
 		return count;
 	}
+	public User loadByCodePwd(String name, String password) {
+		String hql = "from User u where u.username = '" + name
+				+ "' and u.password = '" + password + "'";
+		User user = (User) getSession().createQuery(hql).uniqueResult();
+		return user;
+	}
 
 }

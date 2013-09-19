@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 
 import com.lkk.web.action.basic.BasicAction;
 import com.lkk.web.dao.interfaces.ICategoryDao;
+import com.lkk.web.dao.interfaces.ILevelDao;
+import com.lkk.web.dao.interfaces.IProvinceDao;
 import com.lkk.web.dao.interfaces.IUnitDao;
 import com.lkk.web.model.Category;
+import com.lkk.web.model.Level;
+import com.lkk.web.model.Province;
 import com.lkk.web.model.Unit;
 import com.lkk.web.vo.CategorysInfo;
 
@@ -23,18 +27,22 @@ import com.lkk.web.vo.CategorysInfo;
 public class IndexAction extends BasicAction {
 	private IUnitDao unitDao;
 	private ICategoryDao categoryDao;
+	private ILevelDao levelDao;
+	private IProvinceDao provinceDao;
 	private List<Unit> unitList = new ArrayList<Unit>();
+	private List<Level> levelList = new ArrayList<Level>();
+	private List<Province> provinceList = new ArrayList<Province>();
 	private List<CategorysInfo> categoryList = new ArrayList<CategorysInfo>();
 	@Override
 	public String execute() throws Exception {
-		
-		//unitList = unitDao.findAll();
 		
 		return "indexPage";
 	}
 	
 	public String gotoReg() throws Exception {
 		setCategory();
+		levelList = levelDao.findAll();
+		provinceList = provinceDao.findAll();
 		return "regPage";
 	}
 	
@@ -60,6 +68,8 @@ public class IndexAction extends BasicAction {
 
 	}
 	
+	
+	
 	public ICategoryDao getCategoryDao() {
 		return categoryDao;
 	}
@@ -79,6 +89,14 @@ public class IndexAction extends BasicAction {
 	}
 
 
+	public ILevelDao getLevelDao() {
+		return levelDao;
+	}
+	@Resource
+	public void setLevelDao(ILevelDao levelDao) {
+		this.levelDao = levelDao;
+	}
+
 	public List<Unit> getUnitList() {
 		return unitList;
 	}
@@ -93,6 +111,30 @@ public class IndexAction extends BasicAction {
 
 	public void setCategoryList(List<CategorysInfo> categoryList) {
 		this.categoryList = categoryList;
+	}
+
+	public List<Level> getLevelList() {
+		return levelList;
+	}
+
+	public void setLevelList(List<Level> levelList) {
+		this.levelList = levelList;
+	}
+
+	public IProvinceDao getProvinceDao() {
+		return provinceDao;
+	}
+	@Resource
+	public void setProvinceDao(IProvinceDao provinceDao) {
+		this.provinceDao = provinceDao;
+	}
+
+	public List<Province> getProvinceList() {
+		return provinceList;
+	}
+
+	public void setProvinceList(List<Province> provinceList) {
+		this.provinceList = provinceList;
 	}
 
 }

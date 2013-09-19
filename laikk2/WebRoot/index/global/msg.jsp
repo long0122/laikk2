@@ -1,5 +1,5 @@
 <%@ page language="java" pageEncoding="utf-8"%>
-<%@ include file="./global/global.jsp"%>
+<%@ include file="./global.jsp"%>
 <!DOCTYPE>
 <html>
 	<head>
@@ -22,13 +22,13 @@
 					${msg_content}
 				</p>
 				<p>
-					<a href="${msg_url}">&lt;&lt;返回</a>
+					<a href="${msg_url}" data-ajax="false">&lt;&lt;返回</a>
 				</p>
 			</div>
 
 
 
-			<%@ include file="./global/footer.jsp"%>
+			<%@ include file="./footer.jsp"%>
 		</div>
 	</body>
 </html>

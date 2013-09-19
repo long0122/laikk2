@@ -42,9 +42,7 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	private IRoleDao roleDao;
 	private ILevelDao levelDao;
 	private UnitInfo unitInfo = new UnitInfo();
-
-
-	
+	private Unit unit = new Unit();
 	@Override
 	public String execute() throws Exception {
 
@@ -64,12 +62,11 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	public String add() throws Exception {
 		System.out.println("-------add--------");
 		System.out.println(unitInfo.getUsername());
-		
+
 		String username = unitInfo.getUsername();
 		String password = unitInfo.getPassword();
-		String password2 = unitInfo.getPassword2();
 		String catrgory = unitInfo.getCategory();
-
+		String level = unitInfo.getLevel();
 		String city = unitInfo.getCity();
 
 		Object basePath = request.getSession().getAttribute(
@@ -99,8 +96,9 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		Role role = roleDao.findByCode(GlobalConstants.ROLE_CODE_06);
 		if (role != null)
 			user.setRole(role);
+		City c = null;
 		if (city != null) {
-			City c = cityDao.findByCode(city);
+			c = cityDao.findByCode(city);
 			if (c != null)
 				user.setCity(c);
 		}
@@ -112,7 +110,7 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 				user.setCategory(category_);
 		}
 		user.setState("1");
-		//userDao.add(user);
+		userDao.add(user);
 
 		// add unit
 		Unit u = new Unit();
@@ -121,98 +119,68 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 			u.setManager(user_);
 
 		String name = unitInfo.getName();
+		String idCard = unitInfo.getIdCard();
+		//set name
+		if (name != null && !"".equals(name)) {
+			u.setName(name);
+		}
+		//set idCard
+		if (!(idCard == null || "".equals(idCard))) {
+			u.setIdCard(idCard);
+		}
+		
+		//set city
+		if (c != null)
+			u.setCity(c);
+		
+		
+		// upload file
 		File logo = unitInfo.getLogo();
 		File public2dBarcode = unitInfo.getPublic2dBarcode();
 		File unit2dBarcode = unitInfo.getUnit2dBarcode();
 		File busLicense = unitInfo.getBusLicense();
-		String idCard = unitInfo.getIdCard();
-
-		if (!(name == null || "".equals(name))) {
-			u.setName(name);
-		}
-		String baseUrl = "uploadFile/unitInfo/"+username+"/";
-		if (logo != null && !"".equals(logo)) {
-			String logoPath = FileTools.getFilePath(request, baseUrl, logo, unitInfo.getLogoFileName());
-			u.setLogo(logoPath);
-			System.out.print("-------logo--------"+logoPath);
-		} else {
-			u.setLogo("");
-		}
-		if (public2dBarcode != null && !"".equals(public2dBarcode)) {
-			String public2dBarcodePath = FileTools.getFilePath(request, baseUrl, public2dBarcode, unitInfo.getPublic2dBarcodeFileName());
-			u.setPublic2dBarcode(public2dBarcodePath);
-			System.out.print("-------public2dBarcodePath--------"+public2dBarcodePath);
-		}else{
-			u.setPublic2dBarcode("");
-		}
-		
-		if (unit2dBarcode != null && !"".equals(unit2dBarcode)) {
-			String unit2dBarcodePath = FileTools.getFilePath(request, baseUrl, unit2dBarcode, unitInfo.getUnit2dBarcodeFileName());
-			u.setUnit2dBarcode(unit2dBarcodePath);
-			System.out.print("-------unit2dBarcodePath--------"+unit2dBarcodePath);
-		}else{
-			u.setUnit2dBarcode("");
-		}
-		
+		String baseUrl = "uploadFile/unitInfo/" + username + "/";
 		if (busLicense != null && !"".equals(busLicense)) {
-			String busLicensePath = FileTools.getFilePath(request, baseUrl, busLicense, unitInfo.getBusLicenseFileName());
+			String busLicensePath = FileTools.getFilePath(request, baseUrl,
+					busLicense, unitInfo.getBusLicenseFileName());
 			u.setBusLicense(busLicensePath);
-			System.out.print("-------busLicensePath--------"+busLicensePath);
-		}else{
+			System.out.print("-------busLicensePath--------" + busLicensePath);
+		} else {
 			u.setBusLicense("");
 		}
-		
-		if (!(idCard == null || "".equals(idCard))) {
-			u.setIdCard(idCard);
-		}
-		// set create time
-		u.setCreateTime(new Timestamp(new Date().getTime()));
+
+		/*
+		 * if (logo != null && !"".equals(logo)) { String logoPath =
+		 * FileTools.getFilePath(request, baseUrl, logo,
+		 * unitInfo.getLogoFileName()); u.setLogo(logoPath);
+		 * System.out.print("-------logo--------"+logoPath); } else {
+		 * u.setLogo(""); } if (public2dBarcode != null &&
+		 * !"".equals(public2dBarcode)) { String public2dBarcodePath =
+		 * FileTools.getFilePath(request, baseUrl, public2dBarcode,
+		 * unitInfo.getPublic2dBarcodeFileName());
+		 * u.setPublic2dBarcode(public2dBarcodePath);
+		 * System.out.print("-------public2dBarcodePath--------"
+		 * +public2dBarcodePath); }else{ u.setPublic2dBarcode(""); }
+		 * 
+		 * if (unit2dBarcode != null && !"".equals(unit2dBarcode)) { String
+		 * unit2dBarcodePath = FileTools.getFilePath(request, baseUrl,
+		 * unit2dBarcode, unitInfo.getUnit2dBarcodeFileName());
+		 * u.setUnit2dBarcode(unit2dBarcodePath);
+		 * System.out.print("-------unit2dBarcodePath--------"
+		 * +unit2dBarcodePath); }else{ u.setUnit2dBarcode(""); }
+		 */
 
 		// get level
-		Level l = levelDao.findByCode(GlobalConstants.LEVLE_CODE_01);
-		if (l != null)
-			u.setLevel(l);
-
-		//unitDao.add(u);
-		// User user = (User) request.getSession().getAttribute(
-		// GlobalConstants.SESSION_USER_ADMIN);
-		// Unit unit = new Unit();
-		// unit.setName(unitInfo.getName().trim());
-		// unit.setAuthor(user);
-		// unit.setCity(user.getCity());
-		// unit.setState("0");
-		// Category category = categoryDao.findById(Integer.parseInt(unitInfo
-		// .getCategory()));
-		// unit.setCategory(category);
-		// unit.setAddress(unitInfo.getAddress().trim());
-		// String phone = unitInfo.getPhone();
-		// if (phone != null && !"".equals(phone)) {
-		// unit.setPhone(phone);
-		// } else {
-		// unit.setPhone("");
-		// }
-		// unit.setContact(unitInfo.getContact());
-		// String DateString = Tools.getCurrentTimeSort();
-		// Date date = Tools.getStringToDate(DateString);
-		// unit.setCreateTime(new Timestamp(date.getTime()));
-		// File file = unitInfo.getFile();
-		// if (file != null && !"".equals(file)) {
-		// String baseUrl = "uploadFile/";
-		// baseUrl += Tools.getCurrentDateSortNoTime() + "/";
-		// String picUrl = request.getSession().getServletContext()
-		// .getRealPath("/").replace("\\", "/")
-		// + baseUrl;
-		// String fileName = new Date().getTime()
-		// + Tools.getExtention(unitInfo.getFileFileName());
-		// File dstFile = FileTools.createFile(picUrl, fileName);
-		// FileTools.copy(file, dstFile);
-		// unit.setPicture(baseUrl + fileName);
-		// } else {
-		// unit.setPicture("");
-		// }
-		// unitDao.add(unit);
-		// backUrl = "system/unit!toAdd";
-		// return "success";
+		if (level != null && !"".equals(level)) {
+			Level l = levelDao.findByCode(level);
+			if (l != null)
+				u.setLevel(l);
+		}
+		//set state
+		u.setState("1");
+		// set create time
+		u.setCreateTime(new Timestamp(new Date().getTime()));
+		unitDao.add(u);
 
 		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
 		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "注册成功！");
@@ -222,6 +190,42 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	}
 
 	
+	public String unitIndex() throws Exception {
+		//check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		if(user==null){
+			request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
+			request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "请先登录，才可正常浏览此页面。");
+			Object basePath = request.getSession().getAttribute(
+					GlobalConstants.SESSION_BASEPATH);
+			String backUrl = basePath + "main/index";
+			request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+			return "indexMsg";
+		}else{
+			User u = (User)user;
+			if(!GlobalConstants.ROLE_CODE_06.equals(u.getRole().getCode())){
+				request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
+				request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "用户类型不正确。");
+				Object basePath = request.getSession().getAttribute(
+						GlobalConstants.SESSION_BASEPATH);
+				String backUrl = basePath + "main/index";
+				request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+				return "indexMsg";
+			}
+		
+			
+			
+			//get unit
+			unit = unitDao.findByUserId(u.getId());
+		
+		}
+		
+		
+		
+		
+		return "unitIndex";
+	}
 	
 	
 	public ICityDao getCityDao() {
@@ -286,6 +290,12 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		this.levelDao = levelDao;
 	}
 
+	public Unit getUnit() {
+		return unit;
+	}
 
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
 
 }
