@@ -24,10 +24,17 @@ public class MyInterceptor implements Interceptor {
 		// System.out.println("Action执行前插入 代码");
 		HttpServletRequest request = ServletActionContext.getRequest();
 		// set title
-		request.getSession().setAttribute("session_title", "来看看-来看看网站");
+		request.getSession().setAttribute("session_title", GlobalConstants.META_TITLE);
 		// set meta view
 		request.getSession().setAttribute("meta_view",
 				GlobalConstants.META_VIEW);
+		// set meta keywords
+		request.getSession().setAttribute("meta_keywords",
+				GlobalConstants.META_KEYWORDS);
+		// set meta description
+		request.getSession().setAttribute("meta_description",
+				GlobalConstants.META_DESCRIPTION);
+		
 		// get base path
 		String path = request.getContextPath();
 		String basePath = request.getScheme() + "://" + request.getServerName()

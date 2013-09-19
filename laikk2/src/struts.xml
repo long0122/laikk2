@@ -4,7 +4,7 @@
 	"http://struts.apache.org/dtds/struts-2.1.dtd">
 
 <struts>
-	<constant name="struts.devMode" value="false"/>
+	<constant name="struts.devMode" value="false" />
 	<constant name="struts.ui.theme" value="simple"></constant>
 	<!--全局跳转 -->
 	<package name="myDefault" extends="struts-default">
@@ -20,11 +20,12 @@
 			</result>
 			<result name="fail">/admin/fail.jsp</result>
 			<result name="message">/admin/message.jsp</result>
+			<result name="indexMsg">/index/msg.jsp</result>
 		</global-results>
 	</package>
 	<!-- ===================后台====================== -->
 	<package name="admin" extends="myDefault" namespace="/system">
-		
+
 	</package>
 
 
@@ -32,10 +33,19 @@
 	<package name="index" extends="myDefault" namespace="/main">
 		<!-- 首页 -->
 		<action name="index" class="index">
-			<result name="indexPage">/index/main.jsp</result>
+			<result name="indexPage">/index/index.jsp</result>
+			<result name="regPage">/index/register.jsp</result>
 			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
 		</action>
-		
+		<!-- 企业 -->
+		<action name="unit" class="unitIndex">
+			<result name="indexAddr">/index/basic/unitAddr.jsp</result>
+			<!-- <interceptor-ref name="fileUpload">
+				<param name="maximumSize">102400</param>
+				<param name="allowedTypes">image/bmp,image/png,image/gif,image/jpg</param>
+			</interceptor-ref> -->
+			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
+		</action>
 	</package>
 
 

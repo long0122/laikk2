@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.NotFound;
@@ -32,13 +33,15 @@ public class Unit implements java.io.Serializable {
 	private String logo;
 	private String unit2dBarcode;
 	private String public2dBarcode;
-	private Category category;
 	private Timestamp createTime;
 	private Timestamp updateTime;
 	private String state;
 	private User manager;
 	private Date validity;
-
+	private Level level;
+	private String busLicense;
+	private String idCard;
+	private City city;
 	// Constructors
 
 	/** default constructor */
@@ -66,8 +69,18 @@ public class Unit implements java.io.Serializable {
 		this.name = name;
 	}
 
+	@ManyToOne(fetch=FetchType.LAZY)
+	@NotFound(action = NotFoundAction.IGNORE)
+	@JoinColumn(name="city", referencedColumnName="cityId")
+	public City getCity() {
+		return city;
+	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "manager")
 	public User getManager() {
@@ -78,15 +91,32 @@ public class Unit implements java.io.Serializable {
 		this.manager = manager;
 	}
 
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
-	@JoinColumn(name = "category")
-	public Category getCategory() {
-		return this.category;
+	@JoinColumn(name = "level")
+	public Level getLevel() {
+		return level;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+	@Column(name = "bus_license", length = 500)
+	public String getBusLicense() {
+		return busLicense;
+	}
+
+	public void setBusLicense(String busLicense) {
+		this.busLicense = busLicense;
+	}
+	@Column(name = "id_card", length = 50)
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
 	}
 
 	@Column(name = "create_time", length = 19)

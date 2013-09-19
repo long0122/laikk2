@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 /**
  * 
  * @author Warren
@@ -32,7 +35,8 @@ public class Level implements Serializable{
 		this.id = id;
 	}
 	
-	@OneToMany(mappedBy="level",fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="level",fetch=FetchType.LAZY)
+	@NotFound(action=NotFoundAction.IGNORE)
 	public List<LevelModules> getLevelModules() {
 		return levelModules;
 	}

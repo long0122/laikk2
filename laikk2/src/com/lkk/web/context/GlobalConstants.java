@@ -23,11 +23,18 @@ public class GlobalConstants {
 	
 	public static final String SESSION_WINDOW_WIDTH = "session_window_width";
 	
+	public static final String SESSION_MSG_TITLE = "msg_title";
+	public static final String SESSION_MSG_CONTENT = "msg_content";
+	public static final String SESSION_MSG_URL = "msg_url";
+	
 	/**
 	 * page
 	 */
-	public static final String META_VIEW ="<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 	
+	public static final String META_TITLE ="来看看-来看看网站";
+	public static final String META_VIEW ="<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
+	public static final String META_KEYWORDS ="来看看，移动商城-来看看商城网";
+	public static final String META_DESCRIPTION ="来看看网站是一家专门从事移动互联网内容提供商.内容覆盖全国大部分一,二线城市,实时提供当地生活相关的酒店,餐饮,娱乐,汽车,房产,婚庆,教育,电器,装修,影院等10多个栏目,条理清晰,内容简洁,便于移动用户浏览的专业性网站.";
 	
 	
 	/**
@@ -58,9 +65,26 @@ public class GlobalConstants {
 	 */
 	public static final String ROLE_CODE_06 = "06";
 	/**
-	 * 企业用户
+	 * 普通用户
 	 */
 	public static final String ROLE_CODE_07 = "07";
+	
+	/**
+	 * 会员
+	 */
+	public static final String  LEVLE_CODE_01 = "01";
+	/**
+	 *VIP会员
+	 */
+	public static final String  LEVLE_CODE_02 = "02";
+	/**
+	 * 钻石VIP
+	 */
+	public static final String  LEVLE_CODE_03 = "03";
+	/**
+	 * 至尊VIP
+	 */
+	public static final String  LEVLE_CODE_04 = "04";
 	
 	
 	/**
