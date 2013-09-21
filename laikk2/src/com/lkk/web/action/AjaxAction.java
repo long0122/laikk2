@@ -15,8 +15,10 @@ import org.springframework.stereotype.Component;
 import com.lkk.web.action.basic.BasicAction;
 import com.lkk.web.context.GlobalConstants;
 import com.lkk.web.dao.interfaces.ICityDao;
+import com.lkk.web.dao.interfaces.IUnitDao;
 import com.lkk.web.dao.interfaces.IUserDao;
 import com.lkk.web.model.City;
+import com.lkk.web.model.Unit;
 import com.lkk.web.model.User;
 import com.lkk.web.utils.MD5;
 import com.lkk.web.vo.UserInfo;
@@ -34,6 +36,7 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 
 	private String result;
 	private ICityDao cityDao;
+	private IUnitDao unitDao;
 	private String provinceId;
 	private IUserDao userDao;
 	private UserInfo userinfo = new UserInfo();
@@ -101,6 +104,11 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 				} else {
 					request.getSession().setAttribute(
 							GlobalConstants.SESSION_USER_INDEX, user);
+					//get unit
+					Unit unit = unitDao.findByUserId(user.getId());
+					request.getSession().setAttribute(
+							GlobalConstants.SESSION_UNIT_INDEX, unit);
+					
 					str = "suc";
 				}
 			} else {
@@ -173,6 +181,14 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 
 	public void setUserinfo(UserInfo userinfo) {
 		this.userinfo = userinfo;
+	}
+
+	public IUnitDao getUnitDao() {
+		return unitDao;
+	}
+	@Resource
+	public void setUnitDao(IUnitDao unitDao) {
+		this.unitDao = unitDao;
 	}
 
 

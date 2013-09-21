@@ -2,7 +2,9 @@ package com.lkk.web.action;
 
 import java.io.File;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -26,6 +28,7 @@ import com.lkk.web.model.User;
 import com.lkk.web.utils.FileTools;
 import com.lkk.web.utils.MD5;
 import com.lkk.web.utils.Tools;
+import com.lkk.web.vo.CategorysInfo;
 import com.lkk.web.vo.UnitInfo;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -43,6 +46,8 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	private ILevelDao levelDao;
 	private UnitInfo unitInfo = new UnitInfo();
 	private Unit unit = new Unit();
+	private List<CategorysInfo> categoryList = new ArrayList<CategorysInfo>();
+
 	@Override
 	public String execute() throws Exception {
 
@@ -120,20 +125,19 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 
 		String name = unitInfo.getName();
 		String idCard = unitInfo.getIdCard();
-		//set name
+		// set name
 		if (name != null && !"".equals(name)) {
 			u.setName(name);
 		}
-		//set idCard
+		// set idCard
 		if (!(idCard == null || "".equals(idCard))) {
 			u.setIdCard(idCard);
 		}
-		
-		//set city
+
+		// set city
 		if (c != null)
 			u.setCity(c);
-		
-		
+
 		// upload file
 		File logo = unitInfo.getLogo();
 		File public2dBarcode = unitInfo.getPublic2dBarcode();
@@ -176,7 +180,7 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 			if (l != null)
 				u.setLevel(l);
 		}
-		//set state
+		// set state
 		u.setState("1");
 		// set create time
 		u.setCreateTime(new Timestamp(new Date().getTime()));
@@ -189,45 +193,277 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		return "indexMsg";
 	}
 
-	
+	/**
+	 * 企业管理首页
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public String unitIndex() throws Exception {
-		//check
+		// check
 		Object user = request.getSession().getAttribute(
 				GlobalConstants.SESSION_USER_INDEX);
-		if(user==null){
+		if (user == null) {
 			request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
-			request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "请先登录，才可正常浏览此页面。");
+			request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
+					"请先登录，才可正常浏览此页面。");
 			Object basePath = request.getSession().getAttribute(
 					GlobalConstants.SESSION_BASEPATH);
 			String backUrl = basePath + "main/index";
 			request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
 			return "indexMsg";
-		}else{
-			User u = (User)user;
-			if(!GlobalConstants.ROLE_CODE_06.equals(u.getRole().getCode())){
+		} else {
+			User u = (User) user;
+			if (!GlobalConstants.ROLE_CODE_06.equals(u.getRole().getCode())) {
 				request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
-				request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "用户类型不正确。");
+				request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
+						"用户类型不正确。");
 				Object basePath = request.getSession().getAttribute(
 						GlobalConstants.SESSION_BASEPATH);
 				String backUrl = basePath + "main/index";
 				request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
 				return "indexMsg";
 			}
-		
-			
-			
-			//get unit
-			unit = unitDao.findByUserId(u.getId());
-		
+
+			// get unit
+			// Object unit_ = (Object)request.getSession().getAttribute(
+			// GlobalConstants.SESSION_UNIT_INDEX);
+			// if(unit_!=null){
+			// unit = (Unit)unit_;
+			// }else{
+			// unit = unitDao.findByUserId(u.getId());
+			// }
+
 		}
-		
-		
-		
-		
+
 		return "unitIndex";
 	}
-	
-	
+
+	/**
+	 * 跳转到logo上传
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String gotoLogoUpload() throws Exception {
+		return "logoUpload";
+	}
+	/**
+	 * logo上传
+	 * @return
+	 * @throws Exception
+	 */
+	public String logoUpload() throws Exception {
+		Unit unit = (Unit) request.getSession().getAttribute(
+				GlobalConstants.SESSION_UNIT_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/unit!unitIndex";
+		// upload file
+		File logo = unitInfo.getLogo();
+		String baseUrl = "uploadFile/unitInfo/"
+				+ unit.getManager().getUsername() + "/";
+		if (logo != null && !"".equals(logo)) {
+			String logoPath = FileTools.getFilePath(request, baseUrl,
+					logo, unitInfo.getLogoFileName());
+			unit.setLogo(logoPath);
+			System.out.print("-------logoPath--------"
+					+ logoPath);
+		}
+
+		unitDao.update(unit);
+
+		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
+		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "企业Logo上传成功！");
+		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		return "indexMsg";
+	}
+	/**
+	 * 跳转到 二维码上传页面
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String gotoBarcodeUpload() throws Exception {
+		return "barcodeUpload";
+	}
+
+	/**
+	 * 企业二维码上传
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String unit2dBarcodeUpload() throws Exception {
+		Unit unit = (Unit) request.getSession().getAttribute(
+				GlobalConstants.SESSION_UNIT_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/unit!unitIndex";
+		// upload file
+		File unit2dBarcode = unitInfo.getUnit2dBarcode();
+		String baseUrl = "uploadFile/unitInfo/"
+				+ unit.getManager().getUsername() + "/";
+		if (unit2dBarcode != null && !"".equals(unit2dBarcode)) {
+			String unit2dBarcodePath = FileTools.getFilePath(request, baseUrl,
+					unit2dBarcode, unitInfo.getUnit2dBarcodeFileName());
+			unit.setUnit2dBarcode(unit2dBarcodePath);
+			System.out.print("-------unit2dBarcodePath--------"
+					+ unit2dBarcodePath);
+		}
+
+		unitDao.update(unit);
+
+		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
+		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "企业二维码上传成功！");
+		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		return "indexMsg";
+	}
+
+	/**
+	 * 公众平台二维码上传
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String public2dBarcodeUpload() throws Exception {
+		Unit unit = (Unit) request.getSession().getAttribute(
+				GlobalConstants.SESSION_UNIT_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/unit!unitIndex";
+		// upload file
+		File public2dBarcode = unitInfo.getPublic2dBarcode();
+		String baseUrl = "uploadFile/unitInfo/"
+				+ unit.getManager().getUsername() + "/";
+		if (public2dBarcode != null && !"".equals(public2dBarcode)) {
+			String public2dBarcodePath = FileTools.getFilePath(request,
+					baseUrl, public2dBarcode, unitInfo
+							.getPublic2dBarcodeFileName());
+			unit.setPublic2dBarcode(public2dBarcodePath);
+			System.out.print("-------public2dBarcodePath--------"
+					+ public2dBarcodePath);
+		}
+
+		unitDao.update(unit);
+
+		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
+		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
+				"公众平台二维码上传成功！");
+		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		return "indexMsg";
+	}
+
+	/**
+	 * 跳转到企业简介
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String gotoIntroDesplay() throws Exception {
+		return "introDesplay";
+	}
+
+	/**
+	 * 跳转到企业简介编辑页面
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String gotoIntroEdit() throws Exception {
+		setCategory();
+		return "introEdit";
+	}
+
+	private void setCategory() {
+
+		try {
+			List<Category> topCategorys = categoryDao.findTopCategories(true);
+			if (topCategorys != null) {
+				for (Category top : topCategorys) {
+					CategorysInfo info = new CategorysInfo();
+					info.setCategory(top);
+					List<Category> childrenCategorys = categoryDao
+							.findByParentId(top.getId(), true);
+					if (childrenCategorys != null) {
+						info.setChildrenList(childrenCategorys);
+					}
+					categoryList.add(info);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 企业简介编辑
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String introEdit() throws Exception {
+
+		Unit unit = (Unit) request.getSession().getAttribute(
+				GlobalConstants.SESSION_UNIT_INDEX);
+
+		String name = unitInfo.getName();
+		String category = unitInfo.getCategory();
+		String intro = unitInfo.getIntro();
+		String tel = unitInfo.getTelephone();
+		String phone = unitInfo.getPhone();
+		String qq = unitInfo.getQq();
+		String fax = unitInfo.getFax();
+		String addr = unitInfo.getAddr();
+		String email = unitInfo.getEmail();
+
+		// set name
+		unit.setName(name);
+		// set category
+		if (!unit.getManager().getCategory().getId().toString()
+				.equals(category)
+				&& category != null) {
+			Category c = categoryDao.findById(Integer.parseInt(category));
+			if (c != null) {
+				User u = unit.getManager();
+				u.setCategory(c);
+				userDao.update(u);
+			}
+
+		}
+		// set intro
+		unit.setIntro(intro);
+		unit.setTelephone(tel);
+		unit.setPhone(phone);
+		unit.setQq(qq);
+		unit.setFax(fax);
+		unit.setAddr(addr);
+		unit.setEmail(email);
+
+		// set unitImg
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/unit!unitIndex";
+		// upload file
+		File unitImg = unitInfo.getUnitImg();
+		String baseUrl = "uploadFile/unitInfo/"
+				+ unit.getManager().getUsername() + "/";
+		if (unitImg != null && !"".equals(unitImg)) {
+			String unitImgPath = FileTools.getFilePath(request, baseUrl,
+					unitImg, unitInfo.getUnitFileName());
+			unit.setUnitImg(unitImgPath);
+			System.out.print("-------unitImgPath--------" + unitImgPath);
+		}
+
+		unitDao.update(unit);
+
+		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
+		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "企业简介更新成功！");
+		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		return "indexMsg";
+	}
+
 	public ICityDao getCityDao() {
 		return cityDao;
 	}
@@ -296,6 +532,14 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 
 	public void setUnit(Unit unit) {
 		this.unit = unit;
+	}
+
+	public List<CategorysInfo> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<CategorysInfo> categoryList) {
+		this.categoryList = categoryList;
 	}
 
 }

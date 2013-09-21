@@ -1,8 +1,11 @@
-#Thu Sep 19 17:40:38 CST 2013
+#Sat Sep 21 10:43:06 CST 2013
 eclipse.preferences.version=1
 encoding//WebRoot/index/index.html=UTF-8
 encoding//WebRoot/test/category_li.html=UTF-8
 encoding//WebRoot/test/company-set.html=UTF-8
+encoding//WebRoot/test/company-summary.html=UTF-8
+encoding//WebRoot/test/company-summary_on.html=UTF-8
+encoding//WebRoot/test/company_job.html=UTF-8
 encoding//WebRoot/test/login.html=UTF-8
 encoding//WebRoot/test/member.html=UTF-8
 encoding//WebRoot/test/register.html=UTF-8

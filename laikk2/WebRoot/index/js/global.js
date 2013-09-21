@@ -8,6 +8,9 @@ function errpic(thepic) {
 	thepic.src = "../index/images/no_pic.png" 
 }
 
+function errUnitLogoPic(thepic) {
+	thepic.src = "../index/images/pic.jpg" 
+}
 function pageLoading() {
 	// $.mobile.pageLoading();
 	$.mobile.showPageLoadingMsg();

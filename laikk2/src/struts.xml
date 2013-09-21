@@ -40,6 +40,16 @@
 		<!-- 企业 -->
 		<action name="unit" class="unitIndex">
 			<result name="unitIndex">/index/unit/unitIndex.jsp</result>
+			<result name="barcodeUpload">/index/unit/barcodeUpload.jsp</result>
+			<result name="logoUpload">/index/unit/logoUpload.jsp</result>
+			<result name="introEdit">/index/unit/introEdit.jsp</result>
+			<result name="introDesplay">/index/unit/introDesplay.jsp</result>
+			<interceptor-ref name="fileUpload">
+                <!-- 文件过滤 -->
+                <param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param>
+                <!-- 文件大小, 以字节为单位 -->
+                <param name="maximumSize">1025956</param>
+            </interceptor-ref>
 			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
 		</action>
 	</package>

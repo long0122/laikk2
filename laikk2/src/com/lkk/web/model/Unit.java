@@ -42,6 +42,16 @@ public class Unit implements java.io.Serializable {
 	private String busLicense;
 	private String idCard;
 	private City city;
+	private String intro;
+	private String telephone;
+	private String phone;
+	private String unitImg;
+	private String qq;
+	private String fax;
+	private String addr;
+	private String email;
+	
+	
 	// Constructors
 
 	/** default constructor */
@@ -180,5 +190,72 @@ public class Unit implements java.io.Serializable {
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
 	}
+	@Column(name = "intro")
+	public String getIntro() {
+		return intro;
+	}
 
+	public void setIntro(String intro) {
+		this.intro = intro;
+	}
+	@Column(name = "telephone")
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	@Column(name = "phone")
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	@Column(name = "unit_img")
+	public String getUnitImg() {
+		return unitImg;
+	}
+
+	public void setUnitImg(String unitImg) {
+		this.unitImg = unitImg;
+	}
+	@Column(name = "qq")
+	public String getQq() {
+		return qq;
+	}
+
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+	@Column(name = "fax")
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+	@Column(name = "addr")
+	public String getAddr() {
+		return addr;
+	}
+
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+	@Column(name = "email")
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	
+	
+	
 }

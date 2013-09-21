@@ -18,27 +18,11 @@
     </div>
   </div>
   <div data-role="content">
-    <div class="company"><img src="${basePath}index/images/pic.jpg" class="fl">
-      <div class="fl">
-        <p style="margin:0 0 9px;"><a href="company-summary_on.html" style="color:#353535; text-decoration:none; font-weight:normal;">${unit.name}</a><br>
-        <img src="${basePath}index/images/icon_star.png"></p>
-        <div class="company_date"><span>260</span><p>DAY</p></div>
-        <div class="company_login"><span class="first">
-        
-        <a href="${basePath}main/login!logoutIndex"  data-ajax="false" onclick="return confirm('您确定注销吗?')">注销</a></span><span><a href="${basePath}main/index!gotoReg">免费注册</a></span></div><div class="cl"></div>
-      </div>
-      <div class="cl"></div>
-    </div></div>
-    <div style="padding:0px 0 20px;">
-      <div class="ui-grid-c member_class">
-        <div class="ui-block-a"><a href="#">分享</a></div>
-        <div class="ui-block-b"><a href="#">关注</a></div>
-        <div class="ui-block-c"><a href="#">公众平台</a></div>
-        <div class="ui-block-d"><a href="#">二维码</a></div>
-      </div>
-    </div><div class="width94">
+  <%@ include file="./global/unitHeader.jsp"%>
+    
+    <div class="width94">
     <ul class="discount member_dis">
-      <li><a href="company-summary.html" class="dis_first"><div><img src="${basePath}index/images/icon_member10.png"></div>
+      <li><a href="${basePath}main/unit!gotoIntroEdit" class="dis_first"><div><img src="${basePath}index/images/icon_member10.png"></div>
         <p>企业简介</p>
         </a></li>
       <li><a href="company_job.html"><div><img src="${basePath}index/images/icon_member5.png"></div>
@@ -74,9 +58,12 @@
       <li class="last"><a href="#" class="dis_last"><div><img src="${basePath}index/images/icon_member17.png"></div>
         <p>升级套餐</p>
         </a></li>
+        <li><a href="${basePath}main/unit!gotoBarcodeUpload" class="dis_last"><div><img src="${basePath}index/images/icon_member13.png"></div>
+        <p>二维码上传</p>
+        </a></li>
       <div class="cl"></div>
     </ul>
-    
+     </div>
   </div>
   <%@ include file="../global/footer.jsp"%>
 </div>

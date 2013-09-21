@@ -15,6 +15,7 @@ public class GlobalConstants {
 	public static final String SESSION_CITY="session_city";
 	public static final String SESSION_USER_ADMIN = "userAdmin";
 	public static final String SESSION_USER_INDEX = "userIndex";
+	public static final String SESSION_UNIT_INDEX = "unitIndex";
 	public static final String SESSION_BASEPATH = "basePath";
 	public static final String SESSION_USER_MOBILE = "userMobile";
 	public static final String SESSION_AD_INFO = "session_ad_info";

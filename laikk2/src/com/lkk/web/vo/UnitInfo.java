@@ -33,7 +33,16 @@ public class UnitInfo{
 	private String idCard;
 	private String city;
 	
-	
+	private String intro;
+	private String telephone;
+	private String phone;
+	private File unitImg;
+	private String unitContentType;    //上传文件类型
+	private String unitFileName;  
+	private String qq;
+	private String fax;
+	private String addr;
+	private String email;
 	
 	public String getUsername() {
 		return username;
@@ -157,6 +166,66 @@ public class UnitInfo{
 	}
 	public void setBusLicenseFileName(String busLicenseFileName) {
 		this.busLicenseFileName = busLicenseFileName;
+	}
+	public String getIntro() {
+		return intro;
+	}
+	public void setIntro(String intro) {
+		this.intro = intro;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public File getUnitImg() {
+		return unitImg;
+	}
+	public void setUnitImg(File unitImg) {
+		this.unitImg = unitImg;
+	}
+	public String getUnitContentType() {
+		return unitContentType;
+	}
+	public void setUnitContentType(String unitContentType) {
+		this.unitContentType = unitContentType;
+	}
+	public String getUnitFileName() {
+		return unitFileName;
+	}
+	public void setUnitFileName(String unitFileName) {
+		this.unitFileName = unitFileName;
+	}
+	public String getQq() {
+		return qq;
+	}
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+	public String getFax() {
+		return fax;
+	}
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+	public String getAddr() {
+		return addr;
+	}
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	
