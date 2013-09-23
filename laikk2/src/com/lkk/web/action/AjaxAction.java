@@ -14,17 +14,20 @@ import org.springframework.stereotype.Component;
 
 import com.lkk.web.action.basic.BasicAction;
 import com.lkk.web.context.GlobalConstants;
+import com.lkk.web.dao.interfaces.IAdvertisementDao;
 import com.lkk.web.dao.interfaces.IAreaDao;
 import com.lkk.web.dao.interfaces.ICityDao;
 import com.lkk.web.dao.interfaces.ICustomCategoryDao;
 import com.lkk.web.dao.interfaces.IUnitDao;
 import com.lkk.web.dao.interfaces.IUserDao;
+import com.lkk.web.model.Advertisement;
 import com.lkk.web.model.Area;
 import com.lkk.web.model.City;
 import com.lkk.web.model.CustomCategory;
 import com.lkk.web.model.Unit;
 import com.lkk.web.model.User;
 import com.lkk.web.utils.MD5;
+import com.lkk.web.vo.AdvertisementInfo;
 import com.lkk.web.vo.UserInfo;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -47,8 +50,10 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 	private IAreaDao areaDao;
 	private String cityId;
 	private String customStorageName;
+	private String customStorageId;
 	private ICustomCategoryDao customCategoryDao;
 	private String customCategoryId;
+	private IAdvertisementDao advertisementDao;
 	/**
 	 * 分页
 	 */
@@ -261,6 +266,68 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 
 	}
 
+	/**
+	 * 前台根据类别获得商品列表
+	 * @return
+	 * @throws Exception
+	 */
+	public String getAllAdListByCustomCategory() throws Exception {
+		String basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH).toString();
+		AdvertisementInfo adInfo = new AdvertisementInfo();
+		adInfo.setCustomStorage(customCategoryId);
+		List<Advertisement> adList = advertisementDao.findAll(adInfo , startNum, showSize);
+		
+		String str = "";
+		if (adList != null && adList.size() > 0) {
+			for (Advertisement ad : adList) {
+				String pic = ad.getPicture();
+				if (pic == null || "".equals(pic)) {
+					ad.setPicture(basePath + GlobalConstants.noPic);
+				} else if (!pic.contains("http")) {
+					ad.setPicture(basePath + pic);
+				}
+				
+				str += "<li>";
+				str += "<a href='#'><span><img src=\""+ ad.getPicture()+"\" onerror=\"errpic(this)\" /> <em>"+ad.getTitle()+"</em></span>";
+				str += "<div class=\"product_list\">";
+				str += "<span>编辑 删除</span>";
+				str += "</div>";
+				str += "<div class=\"cl\"></div>";
+				str += "</a>";
+				str += "</li>";
+				
+			}
+		} else {
+			str += "<li>";
+			str += "<strong>暂无相关信息</strong>";
+			str += "</li>";
+		}
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("str", str);
+
+		// 分页
+		if (startNum == -1) {
+			startNum = 0;
+		}
+
+		if (count == -1) {
+			count = advertisementDao.countAll(adInfo);
+		}
+		if (count >= showSize) {
+			startNum = startNum + showSize;
+		} else {
+			startNum = (int) count;
+		}
+		map.put("startNum", String.valueOf(startNum));
+		map.put("count", String.valueOf(count));
+
+		JSONObject jo = JSONObject.fromObject(map);
+		this.result = jo.toString();
+		return SUCCESS;
+	}
+	
 	public String getResult() {
 		return result;
 	}
@@ -368,6 +435,22 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 
 	public void setCustomCategoryId(String customCategoryId) {
 		this.customCategoryId = customCategoryId;
+	}
+
+	public IAdvertisementDao getAdvertisementDao() {
+		return advertisementDao;
+	}
+	@Resource
+	public void setAdvertisementDao(IAdvertisementDao advertisementDao) {
+		this.advertisementDao = advertisementDao;
+	}
+
+	public String getCustomStorageId() {
+		return customStorageId;
+	}
+
+	public void setCustomStorageId(String customStorageId) {
+		this.customStorageId = customStorageId;
 	}
 
 }

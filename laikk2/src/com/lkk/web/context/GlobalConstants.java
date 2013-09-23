@@ -5,7 +5,7 @@ public class GlobalConstants {
 	 * Global
 	 */
 	public static final int PAGE_SIZE = 20;
-	public static final int PAGE_SIZE_INDEX = 10;
+	public static final int PAGE_SIZE_INDEX = 6;
 	public static final String noPic="index/images/no_pic.png";
 	/**
 	 * session

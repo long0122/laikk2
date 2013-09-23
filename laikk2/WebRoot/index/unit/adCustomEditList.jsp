@@ -10,7 +10,55 @@
 		<meta name="Description" content="${meta_description}" />
 	</head>
 	<body>
-		<div data-role="page" id="adCustomListPage" class="com_pany page">
+		<div data-role="page" id="adCustomEditListPage" class="com_pany page" data-dom-cache="false">
+		<script type="text/javascript">
+		$(document).ready(function() {
+			loadData(${adInfo.customStorage});
+		});
+		/*
+		$("#adCustomEditListPage").live("pageshow", function() {
+			$("#contentList").html("<div class=\"cl\" id=\"lastDiv\"></div>");
+			startNum = -1;
+			count = -1;
+			loadData(${adInfo.customStorage});
+		});*/
+	
+				var startNum = -1;
+				var count = -1;
+				function loadData(value){
+					var url = "ajax!getAllAdListByCustomCategory";
+					var params = {customCategoryId:value,startNum:startNum,count:count};
+					$.ajax({
+						type : "POST",
+						url : url,
+						dataType : 'json',
+						data:params,
+						beforeSend : function() {
+							// Handle the beforeSend event
+							pageLoading();
+						},
+						success : function(data) {
+							var jsonObject = eval("(" + data + ")");
+							startNum = Number(jsonObject.startNum);
+							count = Number(jsonObject.count);
+							if(startNum<count){
+								$("#moreDiv").show();
+							}else{
+								$("#moreDiv").hide();
+							}
+							$("#lastDiv").before(jsonObject.str);
+							pageLoading_hide();
+						},
+						error : function(msg) {
+							pageLoading_hide();
+						}
+
+					});
+
+					
+				}
+			</script>
+			
 			<div data-role="header">
 				<a data-ajax="false" href="javascript:window.history.back()"
 					data-rel="back"><img src="${basePath}index/images/back.png" />
@@ -25,7 +73,8 @@
 			<div class=" com_pany_li">
 
 			<div data-role="content">
-				<ul class="product">
+				<ul class="product" id="contentList">
+				<!--  
 				<c:forEach items="${advertisementList}" var="a">
 					<li>
 						<a href="#"><span><img
@@ -38,10 +87,13 @@
 						</a>
 					</li>
 				</c:forEach>
-					<div class="cl"></div>
+			-->
+					<div class="cl" id="lastDiv"></div>
 				</ul>
-				<div class="res_btn">
-									<input type="submit" value="加载更多"> 
+				
+				
+				<div class="res_btn" id="moreDiv">
+									<input type="button" value="加载更多" onclick="loadData(${adInfo.customStorage})"> 
 								</div>
 			</div>
 			

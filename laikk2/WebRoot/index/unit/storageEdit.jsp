@@ -83,7 +83,7 @@
 
 							<div data-role="collapsible-set">
 								<c:forEach items="${customCategoryList}" var="c">
-									<div data-role="collapsible">
+									
 										<h3>
 										<!--  
 											<c:if test="${!empty c.advertisements}">
@@ -91,9 +91,9 @@
 											</c:if>
 											<c:if test="${empty c.advertisements}">${c.name}(${fn:length(c.advertisements)})</c:if>
 											-->
-											<a href="${basePath}main/ad!customEditList?customStorage=${c.id}">${c.name}(${fn:length(c.advertisements)})</a>
+											<a href="${basePath}main/ad!customEditList?customStorage=${c.id}" data-ajax="false">${c.name}(${fn:length(c.advertisements)})</a>
 										</h3>
-									</div>
+								
 								</c:forEach>
 							</div>
 						</div>
