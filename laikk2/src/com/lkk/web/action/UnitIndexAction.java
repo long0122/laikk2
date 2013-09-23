@@ -13,21 +13,26 @@ import org.springframework.stereotype.Component;
 
 import com.lkk.web.action.basic.BasicAction;
 import com.lkk.web.context.GlobalConstants;
+import com.lkk.web.dao.interfaces.IAdvertisementDao;
+import com.lkk.web.dao.interfaces.IAreaDao;
 import com.lkk.web.dao.interfaces.ICategoryDao;
-import com.lkk.web.dao.interfaces.ICityDao;
+import com.lkk.web.dao.interfaces.ICustomCategoryDao;
 import com.lkk.web.dao.interfaces.ILevelDao;
 import com.lkk.web.dao.interfaces.IRoleDao;
 import com.lkk.web.dao.interfaces.IUnitDao;
 import com.lkk.web.dao.interfaces.IUserDao;
+import com.lkk.web.model.Advertisement;
+import com.lkk.web.model.Area;
 import com.lkk.web.model.Category;
-import com.lkk.web.model.City;
+import com.lkk.web.model.CustomCategory;
 import com.lkk.web.model.Level;
 import com.lkk.web.model.Role;
 import com.lkk.web.model.Unit;
 import com.lkk.web.model.User;
 import com.lkk.web.utils.FileTools;
 import com.lkk.web.utils.MD5;
-import com.lkk.web.utils.Tools;
+import com.lkk.web.utils.MsgUtil;
+import com.lkk.web.vo.AdvertisementInfo;
 import com.lkk.web.vo.CategorysInfo;
 import com.lkk.web.vo.UnitInfo;
 import com.opensymphony.xwork2.ModelDriven;
@@ -41,13 +46,17 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	private IUnitDao unitDao;
 	private IUserDao userDao;
 	private ICategoryDao categoryDao;
-	private ICityDao cityDao;
+	private IAreaDao areaDao;
 	private IRoleDao roleDao;
 	private ILevelDao levelDao;
 	private UnitInfo unitInfo = new UnitInfo();
 	private Unit unit = new Unit();
 	private List<CategorysInfo> categoryList = new ArrayList<CategorysInfo>();
-
+	private ICustomCategoryDao customCategoryDao;
+	private List<CustomCategory> customCategoryList = new ArrayList<CustomCategory>();
+	private IAdvertisementDao advertisementDao;
+	private List<Advertisement> advertisementList;
+	private static final String FILE_URL  = "uploadFile/unitInfo/";
 	@Override
 	public String execute() throws Exception {
 
@@ -72,25 +81,19 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		String password = unitInfo.getPassword();
 		String catrgory = unitInfo.getCategory();
 		String level = unitInfo.getLevel();
-		String city = unitInfo.getCity();
+		String area = unitInfo.getArea();
 
 		Object basePath = request.getSession().getAttribute(
 				GlobalConstants.SESSION_BASEPATH);
 		String backUrl = basePath + "main/index!gotoReg";
 		if (username == null || "".equals(username)) {
-			request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
-			request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
-					"用户名不能为空。");
-			request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+			MsgUtil.setFialMsg(request, "用户名不能为空。", backUrl);
 			return "indexMsg";
 		}
 		// check user
 		boolean isExists = userDao.checkUserExistsWithName(username.trim());
 		if (isExists) {
-			request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
-			request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
-					"用户名已被占用，请重新填写。");
-			request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+			MsgUtil.setFialMsg(request, "用户名已被占用，请重新填写。", backUrl);
 			return "indexMsg";
 		}
 
@@ -101,11 +104,11 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		Role role = roleDao.findByCode(GlobalConstants.ROLE_CODE_06);
 		if (role != null)
 			user.setRole(role);
-		City c = null;
-		if (city != null) {
-			c = cityDao.findByCode(city);
-			if (c != null)
-				user.setCity(c);
+		Area a = null;
+		if (area != null) {
+			a = areaDao.findByCode(area);
+			if (a != null)
+				user.setArea(a);
 		}
 
 		if (catrgory != null) {
@@ -134,16 +137,13 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 			u.setIdCard(idCard);
 		}
 
-		// set city
-		if (c != null)
-			u.setCity(c);
 
 		// upload file
-		File logo = unitInfo.getLogo();
-		File public2dBarcode = unitInfo.getPublic2dBarcode();
-		File unit2dBarcode = unitInfo.getUnit2dBarcode();
+//		File logo = unitInfo.getLogo();
+//		File public2dBarcode = unitInfo.getPublic2dBarcode();
+//		File unit2dBarcode = unitInfo.getUnit2dBarcode();
 		File busLicense = unitInfo.getBusLicense();
-		String baseUrl = "uploadFile/unitInfo/" + username + "/";
+		String baseUrl = FILE_URL + username + "/";
 		if (busLicense != null && !"".equals(busLicense)) {
 			String busLicensePath = FileTools.getFilePath(request, baseUrl,
 					busLicense, unitInfo.getBusLicenseFileName());
@@ -186,10 +186,8 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		u.setCreateTime(new Timestamp(new Date().getTime()));
 		unitDao.add(u);
 
-		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
-		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "注册成功！");
 		backUrl = basePath.toString();
-		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		MsgUtil.setSuccessMsg(request, "注册成功！", backUrl);
 		return "indexMsg";
 	}
 
@@ -203,25 +201,16 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		// check
 		Object user = request.getSession().getAttribute(
 				GlobalConstants.SESSION_USER_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/index";
 		if (user == null) {
-			request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
-			request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
-					"请先登录，才可正常浏览此页面。");
-			Object basePath = request.getSession().getAttribute(
-					GlobalConstants.SESSION_BASEPATH);
-			String backUrl = basePath + "main/index";
-			request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
 			return "indexMsg";
 		} else {
 			User u = (User) user;
 			if (!GlobalConstants.ROLE_CODE_06.equals(u.getRole().getCode())) {
-				request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作失败");
-				request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
-						"用户类型不正确。");
-				Object basePath = request.getSession().getAttribute(
-						GlobalConstants.SESSION_BASEPATH);
-				String backUrl = basePath + "main/index";
-				request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+				MsgUtil.setFialMsg(request, "用户类型不正确。", backUrl);
 				return "indexMsg";
 			}
 
@@ -246,6 +235,17 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	 * @throws Exception
 	 */
 	public String gotoLogoUpload() throws Exception {
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		
 		return "logoUpload";
 	}
 	/**
@@ -258,10 +258,19 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 				GlobalConstants.SESSION_UNIT_INDEX);
 		Object basePath = request.getSession().getAttribute(
 				GlobalConstants.SESSION_BASEPATH);
-		String backUrl = basePath + "main/unit!unitIndex";
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		
+		backUrl = basePath + "main/unit!unitIndex";
 		// upload file
 		File logo = unitInfo.getLogo();
-		String baseUrl = "uploadFile/unitInfo/"
+		String baseUrl = FILE_URL
 				+ unit.getManager().getUsername() + "/";
 		if (logo != null && !"".equals(logo)) {
 			String logoPath = FileTools.getFilePath(request, baseUrl,
@@ -272,10 +281,7 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		}
 
 		unitDao.update(unit);
-
-		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
-		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "企业Logo上传成功！");
-		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		MsgUtil.setSuccessMsg(request, "企业Logo上传成功！", backUrl);
 		return "indexMsg";
 	}
 	/**
@@ -285,6 +291,17 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	 * @throws Exception
 	 */
 	public String gotoBarcodeUpload() throws Exception {
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		
 		return "barcodeUpload";
 	}
 
@@ -297,12 +314,20 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	public String unit2dBarcodeUpload() throws Exception {
 		Unit unit = (Unit) request.getSession().getAttribute(
 				GlobalConstants.SESSION_UNIT_INDEX);
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
 		Object basePath = request.getSession().getAttribute(
 				GlobalConstants.SESSION_BASEPATH);
-		String backUrl = basePath + "main/unit!unitIndex";
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		backUrl = basePath + "main/unit!unitIndex";
 		// upload file
 		File unit2dBarcode = unitInfo.getUnit2dBarcode();
-		String baseUrl = "uploadFile/unitInfo/"
+		String baseUrl = FILE_URL
 				+ unit.getManager().getUsername() + "/";
 		if (unit2dBarcode != null && !"".equals(unit2dBarcode)) {
 			String unit2dBarcodePath = FileTools.getFilePath(request, baseUrl,
@@ -313,10 +338,7 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		}
 
 		unitDao.update(unit);
-
-		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
-		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "企业二维码上传成功！");
-		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		MsgUtil.setSuccessMsg(request, "企业二维码上传成功！", backUrl);
 		return "indexMsg";
 	}
 
@@ -331,10 +353,19 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 				GlobalConstants.SESSION_UNIT_INDEX);
 		Object basePath = request.getSession().getAttribute(
 				GlobalConstants.SESSION_BASEPATH);
-		String backUrl = basePath + "main/unit!unitIndex";
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		
+		backUrl = basePath + "main/unit!unitIndex";
 		// upload file
 		File public2dBarcode = unitInfo.getPublic2dBarcode();
-		String baseUrl = "uploadFile/unitInfo/"
+		String baseUrl = FILE_URL
 				+ unit.getManager().getUsername() + "/";
 		if (public2dBarcode != null && !"".equals(public2dBarcode)) {
 			String public2dBarcodePath = FileTools.getFilePath(request,
@@ -346,11 +377,7 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		}
 
 		unitDao.update(unit);
-
-		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
-		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT,
-				"公众平台二维码上传成功！");
-		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		MsgUtil.setSuccessMsg(request,"公众平台二维码上传成功！", backUrl);
 		return "indexMsg";
 	}
 
@@ -371,6 +398,17 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	 * @throws Exception
 	 */
 	public String gotoIntroEdit() throws Exception {
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		
 		setCategory();
 		return "introEdit";
 	}
@@ -407,7 +445,17 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 
 		Unit unit = (Unit) request.getSession().getAttribute(
 				GlobalConstants.SESSION_UNIT_INDEX);
-
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		
 		String name = unitInfo.getName();
 		String category = unitInfo.getCategory();
 		String intro = unitInfo.getIntro();
@@ -442,12 +490,10 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		unit.setEmail(email);
 
 		// set unitImg
-		Object basePath = request.getSession().getAttribute(
-				GlobalConstants.SESSION_BASEPATH);
-		String backUrl = basePath + "main/unit!unitIndex";
+		backUrl = basePath + "main/unit!unitIndex";
 		// upload file
 		File unitImg = unitInfo.getUnitImg();
-		String baseUrl = "uploadFile/unitInfo/"
+		String baseUrl = FILE_URL
 				+ unit.getManager().getUsername() + "/";
 		if (unitImg != null && !"".equals(unitImg)) {
 			String unitImgPath = FileTools.getFilePath(request, baseUrl,
@@ -458,23 +504,49 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 
 		unitDao.update(unit);
 
-		request.setAttribute(GlobalConstants.SESSION_MSG_TITLE, "操作成功");
-		request.setAttribute(GlobalConstants.SESSION_MSG_CONTENT, "企业简介更新成功！");
-		request.setAttribute(GlobalConstants.SESSION_MSG_URL, backUrl);
+		MsgUtil.setSuccessMsg(request, "企业简介更新成功！", backUrl);
 		return "indexMsg";
 	}
 
-	public ICityDao getCityDao() {
-		return cityDao;
+	/**
+	 * 跳转到 仓库管理
+	 * @return
+	 * @throws Exception
+	 */
+	public String gotoStorageEdit() throws Exception {
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/index";
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}
+		Unit unit =(Unit)request.getSession().getAttribute(
+				GlobalConstants.SESSION_UNIT_INDEX);
+		//get custom storage
+		customCategoryList = customCategoryDao.findByUnitId(unit.getId());
+		
+		AdvertisementInfo adInfo = new AdvertisementInfo();
+		adInfo.setUnit(unit.getId().toString());
+		adInfo.setState(GlobalConstants.STATE_0);
+		advertisementList = advertisementDao.findAll(adInfo ,0, 10);
+		return "storageEdit";
 	}
-
-	@Resource
-	public void setCityDao(ICityDao cityDao) {
-		this.cityDao = cityDao;
-	}
-
+	
+	
 	public ICategoryDao getCategoryDao() {
 		return categoryDao;
+	}
+
+	public IAreaDao getAreaDao() {
+		return areaDao;
+	}
+	@Resource
+	public void setAreaDao(IAreaDao areaDao) {
+		this.areaDao = areaDao;
 	}
 
 	@Resource
@@ -540,6 +612,38 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 
 	public void setCategoryList(List<CategorysInfo> categoryList) {
 		this.categoryList = categoryList;
+	}
+
+	public ICustomCategoryDao getCustomCategoryDao() {
+		return customCategoryDao;
+	}
+	@Resource
+	public void setCustomCategoryDao(ICustomCategoryDao customCategoryDao) {
+		this.customCategoryDao = customCategoryDao;
+	}
+
+	public List<CustomCategory> getCustomCategoryList() {
+		return customCategoryList;
+	}
+
+	public void setCustomCategoryList(List<CustomCategory> customCategoryList) {
+		this.customCategoryList = customCategoryList;
+	}
+
+	public IAdvertisementDao getAdvertisementDao() {
+		return advertisementDao;
+	}
+	@Resource
+	public void setAdvertisementDao(IAdvertisementDao advertisementDao) {
+		this.advertisementDao = advertisementDao;
+	}
+
+	public List<Advertisement> getAdvertisementList() {
+		return advertisementList;
+	}
+
+	public void setAdvertisementList(List<Advertisement> advertisementList) {
+		this.advertisementList = advertisementList;
 	}
 
 }

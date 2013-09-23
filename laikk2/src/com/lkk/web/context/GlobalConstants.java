@@ -50,26 +50,18 @@ public class GlobalConstants {
 	 */
 	public static final String ROLE_CODE_02 = "02";
 	/**
-	 * 市级代理
+	 * 地区代理
 	 */
 	public static final String ROLE_CODE_03 = "03";
-	/**
-	 * 栏目代理
-	 */
-	public static final String ROLE_CODE_04 = "04";
-	/**
-	 * 录入人员
-	 */
-	public static final String ROLE_CODE_05 = "05";
 	/**
 	 * 企业用户
 	 */
 	public static final String ROLE_CODE_06 = "06";
-	/**
-	 * 普通用户
-	 */
-	public static final String ROLE_CODE_07 = "07";
 	
+	
+	/**
+	 * level_code
+	 */
 	/**
 	 * 会员
 	 */
@@ -86,6 +78,25 @@ public class GlobalConstants {
 	 * 至尊VIP
 	 */
 	public static final String  LEVLE_CODE_04 = "04";
+	
+	/**
+	 * 在仓库
+	 */
+	public static final String STATE_0 ="0";
+	/**
+	 * 已上架
+	 */
+	public static final String STATE_1 ="1";
+	/**
+	 * 促销中
+	 */
+	public static final String STATE_2="2";
+	/**
+	 * 自定义商品
+	 */
+	public static final String STATE_3 ="3";
+	
+	
 	
 	
 	/**

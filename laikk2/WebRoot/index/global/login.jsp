@@ -1,7 +1,6 @@
 <%@ page language="java" pageEncoding="utf-8"%>
 
 <!-- login page -->
-<script type="text/javascript" src="${basePath}index/jquery-mobile/jquery.form.js"></script>
 <script type="text/javascript" src="${basePath}index/js/login.js"></script>
  <div class="login" id="loginDiv" style="display: none">
  <form action="${basePath}ajax!login" method="post" id="loginForm" data-ajax="false">

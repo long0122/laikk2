@@ -12,7 +12,7 @@ public class UserInfo {
 	private String role;
 	private String nickname;
 	private String state;
-	private String city;
+	private String area;
 	private int category;
 
 	public String getState() {
@@ -71,13 +71,6 @@ public class UserInfo {
 		this.role = role;
 	}
 
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
 
 	public int getCategory() {
 		return category;
@@ -85,6 +78,14 @@ public class UserInfo {
 
 	public void setCategory(int category) {
 		this.category = category;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
 	}
 
 }

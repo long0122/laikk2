@@ -15,8 +15,10 @@
 		<script type="text/javascript" src="${basePath}index/js/city.js"></script>
 			<script type="text/javascript">
 	$("#regPage").live("pageshow", function() {
-		//setup();
+		$('#city').change(function(){ 
+			selectArea($(this).children('option:selected').val())
 		});
+	});
 </script>
 
 			<div class="home_top">
@@ -192,7 +194,7 @@
 						</dt>
 						<div class="cl"></div>
 					</dl>
-					<dl style="width: 46%;" class="fl">
+					<dl style="width: 30%;" class="fl">
 						<dt>
 							<s:select list="provinceList" name="province"
 								listKey="provinceId" listValue="province" headerKey=""
@@ -200,11 +202,21 @@
 						</dt>
 						<div class="cl"></div>
 					</dl>
-					<dl style="width: 46%;" class="fr">
+					<dl style="width: 30%;" class="fm">
 						<dt>
 							<select id="city" name="city">
 								<option value="">
 									地级市
+								</option>
+							</select>
+						</dt>
+						<div class="cl"></div>
+					</dl>
+						<dl style="width: 30%;" class="fm">
+						<dt>
+							<select id="area" name="area">
+								<option value="">
+									地级区
 								</option>
 							</select>
 						</dt>

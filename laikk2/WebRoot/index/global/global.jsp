@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions"  prefix="fn"%>
 <%
 	String path_ = request.getContextPath();
 	String basePath_ = request.getScheme() + "://"
@@ -19,6 +20,7 @@
 <script src="<%=basePath_%>index/jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
 
 <!-- my js -->
+<script type="text/javascript" src="${basePath}index/jquery-mobile/jquery.form.js"></script>
 <script src="<%=basePath_%>index/js/global.js"></script> 
 
 

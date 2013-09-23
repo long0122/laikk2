@@ -32,7 +32,8 @@ public class LoginAction extends BasicAction implements ModelDriven {
 		String checkCode = loginInfo.getCheckCode();
 		String code = (String) request.getSession().getAttribute("checkCode");
 		// 验证验证码
-		if (checkCode != null && checkCode.equals(code)) {
+		if (true) {
+		//if (checkCode != null && checkCode.equals(code)) {
 			if (userDao.isExist(name, password)) {
 				User user = userDao.loadByCodePwd(name, password);
 				String state = user.getState();

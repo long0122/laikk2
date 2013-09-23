@@ -11,15 +11,16 @@
 	</head>
 	<body>
 <div data-role="page" id="page" class="com_pany page">
-<div class=" com_pany_li">
+
   <div class="home_top"><img src="${basePath}index/images/advert.jpg">
     <div><a href="#"> &nbsp;</a><a href="#" class="on"> &nbsp;</a><a href="#"> &nbsp;</a><a href="#"> &nbsp;</a>
       <div class="cl"></div>
     </div>
   </div>
   <div data-role="content">
-  <%@ include file="./global/unitHeader.jsp"%>
-    
+
+    <div class=" com_pany_li">
+      <%@ include file="./global/unitHeader.jsp"%>
     <div class="width94">
     <ul class="discount member_dis">
       <li><a href="${basePath}main/unit!gotoIntroEdit" class="dis_first"><div><img src="${basePath}index/images/icon_member10.png"></div>
@@ -46,7 +47,7 @@
       <li><a href="company-customer.html"><div><img src="${basePath}index/images/icon_member14.png"></div>
         <p>添加客户</p>
         </a></li>
-      <li class="last"><a href="goods.html" class="dis_last"><div><img src="${basePath}index/images/icon_member6.png"></div>
+      <li class="last"><a href="${basePath}main/unit!gotoStorageEdit" class="dis_last"><div><img src="${basePath}index/images/icon_member6.png"></div>
         <p>我的仓库</p>
         </a></li>
         <li><a href="company-active.html" class="dis_first"><div><img src="${basePath}index/images/icon_member15.png"></div>

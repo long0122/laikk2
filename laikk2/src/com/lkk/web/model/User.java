@@ -29,7 +29,7 @@ public class User implements Serializable{
 	private String state;
 	private User author;
 	private Role role;
-	private City city;
+	private Area area;
 	private Category category;
 	private String provinceId;
 	@Id
@@ -89,14 +89,16 @@ public class User implements Serializable{
 	public void setState(String state) {
 		this.state = state;
 	}
+
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@NotFound(action=NotFoundAction.IGNORE)
-	@JoinColumn(name="city",referencedColumnName="cityid")
-	public City getCity() {
-		return city;
+	@JoinColumn(name="area",referencedColumnName="areaid")
+	public Area getArea() {
+		return area;
 	}
-	public void setCity(City city) {
-		this.city = city;
+	public void setArea(Area area) {
+		this.area = area;
 	}
 	@ManyToOne(fetch=FetchType.LAZY)
 	@NotFound(action=NotFoundAction.IGNORE)

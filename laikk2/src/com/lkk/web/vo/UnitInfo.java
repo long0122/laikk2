@@ -31,7 +31,7 @@ public class UnitInfo{
 	private String busLicenseContentType;
 	private String busLicenseFileName;
 	private String idCard;
-	private String city;
+	private String area;
 	
 	private String intro;
 	private String telephone;
@@ -63,11 +63,12 @@ public class UnitInfo{
 	public void setPassword2(String password2) {
 		this.password2 = password2;
 	}
-	public String getCity() {
-		return city;
+
+	public String getArea() {
+		return area;
 	}
-	public void setCity(String city) {
-		this.city = city;
+	public void setArea(String area) {
+		this.area = area;
 	}
 	public String getName() {
 		return name;

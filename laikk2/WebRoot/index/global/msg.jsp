@@ -13,10 +13,17 @@
 	<body>
 		<div data-role="page" id="msgPage" class="page">
 		<a href="${basePath}" class="logo" style="margin-top: 15px;margin-bottom: -15px"><img src="${basePath}index/images/logo.png"></a>
-			<div class="res_login">
-				<span>${msg_title}<a href="#"><img
-							src="${basePath}index/images/icon_register.png"> </a> </span>
+				<div data-role="header">
+				<a data-ajax="false" href="${msg_url}"
+					data-rel="back"><img src="${basePath}index/images/back.png" />
+				</a>
+				<h1>
+					${msg_title}
+				</h1>
+				<a href="#"><img src="${basePath}index/images/category.png">
+				</a>
 			</div>
+			
 			<div data-role="content" style="margin-left: 10px">
 				<p style="margin: 10px 0 10px 10px">
 					${msg_content}

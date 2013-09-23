@@ -49,4 +49,8 @@ public interface IUserDao extends IBasicDao<User, Serializable>{
 	 * @return
 	 */
 	public long countSearch(UserInfo userInfo);
+
+	public List<User> findByAuthorId(int startIndex, int pageSize, int id);
+
+	public long countByAuthorId(int id);
 }

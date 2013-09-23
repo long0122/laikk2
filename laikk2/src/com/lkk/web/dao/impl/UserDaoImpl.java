@@ -50,8 +50,8 @@ public class UserDaoImpl extends BasicDaoImpl<User, String> implements IUserDao 
 				&& !"".equals(userInfo.getNickname())) {
 			hql += " and u.nickname like '%" + userInfo.getNickname().trim()
 					+ "%'";
-		} else if (userInfo.getCity() != null && !"".equals(userInfo.getCity())) {
-			hql += " and u.city.cityId = " + userInfo.getCity();
+		} else if (userInfo.getArea() != null && !"".equals(userInfo.getArea())) {
+			hql += " and u.area.areaId = " + userInfo.getArea();
 		} else if (userInfo.getRole() != null && !"".equals(userInfo.getRole())) {
 			hql += " and u.role.id = " + userInfo.getRole();
 		} else if (userInfo.getState() != null
@@ -69,9 +69,9 @@ public class UserDaoImpl extends BasicDaoImpl<User, String> implements IUserDao 
 		if (userInfo.getUsername() != null
 				&& !"".equals(userInfo.getUsername())) {
 			hql += " and u.username like '%" + userInfo.getUsername() + "%'";
-		} else if (userInfo.getCity() != null && !"".equals(userInfo.getCity())) {
-			hql += " and u.city.id = " + userInfo.getCity();
-		} else if (userInfo.getRole() != null && !"".equals(userInfo.getRole())) {
+		}else if (userInfo.getArea() != null && !"".equals(userInfo.getArea())) {
+			hql += " and u.area.areaId = " + userInfo.getArea();
+		}else if (userInfo.getRole() != null && !"".equals(userInfo.getRole())) {
 			hql += " and u.role.id = " + userInfo.getRole();
 		} else if (userInfo.getState() != null
 				&& !"".equals(userInfo.getState())) {
@@ -86,6 +86,20 @@ public class UserDaoImpl extends BasicDaoImpl<User, String> implements IUserDao 
 				+ "' and u.password = '" + password + "'";
 		User user = (User) getSession().createQuery(hql).uniqueResult();
 		return user;
+	}
+
+	public List<User> findByAuthorId(int startIndex, int pageSize, int authorId) {
+		String hql = "from User u where u.author.id= '" + authorId + "'";
+		List<User> list = getSession().createQuery(hql).setFirstResult(
+				startIndex).setMaxResults(pageSize).list();
+		return list;
+	}
+
+	public long countByAuthorId(int authorId) {
+		String hql = "select count(u) from User u where u.author.id= '" + authorId + "'";
+		long count = ((Long) getSession().createQuery(hql).uniqueResult())
+				.intValue();
+		return count;
 	}
 
 }

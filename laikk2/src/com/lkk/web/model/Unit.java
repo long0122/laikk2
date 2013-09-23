@@ -1,8 +1,11 @@
 package com.lkk.web.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -41,7 +45,6 @@ public class Unit implements java.io.Serializable {
 	private Level level;
 	private String busLicense;
 	private String idCard;
-	private City city;
 	private String intro;
 	private String telephone;
 	private String phone;
@@ -50,7 +53,7 @@ public class Unit implements java.io.Serializable {
 	private String fax;
 	private String addr;
 	private String email;
-	
+	private List<CustomCategory> customCategorys = new ArrayList<CustomCategory>();
 	
 	// Constructors
 
@@ -79,17 +82,20 @@ public class Unit implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@NotFound(action = NotFoundAction.IGNORE)
-	@JoinColumn(name="city", referencedColumnName="cityId")
-	public City getCity() {
-		return city;
+	@OneToMany(
+			cascade={CascadeType.PERSIST,CascadeType.MERGE},
+			fetch=FetchType.LAZY,
+			mappedBy="unit",
+			targetEntity=CustomCategory.class
+	)
+	public List<CustomCategory> getCustomCategorys() {
+		return customCategorys;
 	}
 
-	public void setCity(City city) {
-		this.city = city;
+	public void setCustomCategorys(List<CustomCategory> customCategorys) {
+		this.customCategorys = customCategorys;
 	}
-
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "manager")
@@ -112,6 +118,8 @@ public class Unit implements java.io.Serializable {
 	public void setLevel(Level level) {
 		this.level = level;
 	}
+	
+	
 	@Column(name = "bus_license", length = 500)
 	public String getBusLicense() {
 		return busLicense;

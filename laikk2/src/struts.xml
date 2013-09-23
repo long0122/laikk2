@@ -25,7 +25,12 @@
 	</package>
 	<!-- ===================后台====================== -->
 	<package name="admin" extends="myDefault" namespace="/system">
-
+<!-- 用户 -->
+		<action name="user" class="user">
+			<result name="toSearch">/admin/user/userSearch.jsp</result>
+			<result name="searchList">/admin/user/userSearchList.jsp</result>
+			<result name="toSee">/admin/user/userSee.jsp</result>
+		</action>
 	</package>
 
 
@@ -44,12 +49,20 @@
 			<result name="logoUpload">/index/unit/logoUpload.jsp</result>
 			<result name="introEdit">/index/unit/introEdit.jsp</result>
 			<result name="introDesplay">/index/unit/introDesplay.jsp</result>
+			<result name="storageEdit">/index/unit/storageEdit.jsp</result>
 			<interceptor-ref name="fileUpload">
                 <!-- 文件过滤 -->
                 <param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param>
                 <!-- 文件大小, 以字节为单位 -->
                 <param name="maximumSize">1025956</param>
             </interceptor-ref>
+			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
+		</action>
+		<!-- 广告-->
+		<action name="ad" class="adIndex">
+			<result name="adAdd">/index/unit/adAdd.jsp</result>
+			<result name="adCustomAdd">/index/unit/adCustomAdd.jsp</result>
+			<result name="adCustomEditList">/index/unit/adCustomEditList.jsp</result>
 			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
 		</action>
 	</package>
