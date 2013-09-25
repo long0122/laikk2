@@ -4,7 +4,7 @@
 	"http://struts.apache.org/dtds/struts-2.1.dtd">
 
 <struts>
-	<constant name="struts.devMode" value="false" />
+	<constant name="struts.devMode" value="true" />
 	<constant name="struts.ui.theme" value="simple"></constant>
 	<!--全局跳转 -->
 	<package name="myDefault" extends="struts-default">
@@ -50,6 +50,9 @@
 			<result name="introEdit">/index/unit/introEdit.jsp</result>
 			<result name="introDesplay">/index/unit/introDesplay.jsp</result>
 			<result name="storageEdit">/index/unit/storageEdit.jsp</result>
+			<result name="attentionAdd">/index/unit/attentionAdd.jsp</result>
+			
+			
 			<interceptor-ref name="fileUpload">
                 <!-- 文件过滤 -->
                 <param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param>

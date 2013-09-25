@@ -15,6 +15,7 @@ import com.lkk.web.action.basic.BasicAction;
 import com.lkk.web.context.GlobalConstants;
 import com.lkk.web.dao.interfaces.IAdvertisementDao;
 import com.lkk.web.dao.interfaces.IAreaDao;
+import com.lkk.web.dao.interfaces.IAttentionDao;
 import com.lkk.web.dao.interfaces.ICategoryDao;
 import com.lkk.web.dao.interfaces.ICustomCategoryDao;
 import com.lkk.web.dao.interfaces.ILevelDao;
@@ -23,6 +24,7 @@ import com.lkk.web.dao.interfaces.IUnitDao;
 import com.lkk.web.dao.interfaces.IUserDao;
 import com.lkk.web.model.Advertisement;
 import com.lkk.web.model.Area;
+import com.lkk.web.model.Attention;
 import com.lkk.web.model.Category;
 import com.lkk.web.model.CustomCategory;
 import com.lkk.web.model.Level;
@@ -56,6 +58,9 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	private List<CustomCategory> customCategoryList = new ArrayList<CustomCategory>();
 	private IAdvertisementDao advertisementDao;
 	private List<Advertisement> advertisementList;
+	private List<Unit> attUnits;
+	private List<Attention> attentions;
+	private IAttentionDao attentionDao;
 	private static final String FILE_URL  = "uploadFile/unitInfo/";
 	@Override
 	public String execute() throws Exception {
@@ -536,6 +541,77 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 		return "storageEdit";
 	}
 	
+	/**
+	 * 跳转到添加关注
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String gotoAttentionAdd() throws Exception {
+		// check
+		Object user = request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		String backUrl = basePath + "main/index";
+		User u = null;
+		if (user == null) {
+			MsgUtil.setFialMsg(request, "请先登录，才可正常浏览此页面。", backUrl);
+			return "indexMsg";
+		}else{
+			u =(User)user;
+		}
+		
+		attUnits = unitDao.findByArea(u.getArea().getAreaId());
+		
+		Unit unit =(Unit)request.getSession().getAttribute(
+				GlobalConstants.SESSION_UNIT_INDEX);
+		attentions = attentionDao.findAttByUnitId(unit.getId());
+		
+		return "attentionAdd";
+	}
+	
+	/**
+	 * 
+	 * 添加关注企业
+	 * @return
+	 * @throws Exception
+	 */
+	public String attentionAdd() throws Exception {
+		System.out.println("----------add--------------");
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		Object user_ =request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Unit unit = null;
+		String backUrl = basePath + "main/index";
+		if(user_==null){
+			MsgUtil.setReLoginMsg(request, backUrl);
+			return "indexMsg";
+		}else{
+			unit = (Unit)request.getSession().getAttribute(
+					GlobalConstants.SESSION_UNIT_INDEX);
+		}
+		if(unitInfo.getId()==null){
+			backUrl = basePath + "main/unit!gotoStorageEdit";
+			MsgUtil.setFialMsg(request, "获取ID失败。", backUrl);
+			return "indexMsg";
+		}
+		
+		Unit attUnit = unitDao.findById(Integer.parseInt(unitInfo.getId()));
+		System.out.println("----"+attUnit);
+		System.out.println("----"+unit);
+		Attention att = new Attention();
+		att.setUnit(unit);
+		att.setAttUnit(attUnit);
+		attentionDao.add(att);
+		
+		
+		backUrl = basePath + "main/unit!gotoAttentionAdd";
+		MsgUtil.setSuccessMsg(request, "关注企业添加成功！", backUrl);
+		return "indexMsg";
+	}
+	
 	
 	public ICategoryDao getCategoryDao() {
 		return categoryDao;
@@ -645,5 +721,30 @@ public class UnitIndexAction extends BasicAction implements ModelDriven {
 	public void setAdvertisementList(List<Advertisement> advertisementList) {
 		this.advertisementList = advertisementList;
 	}
+
+	public List<Unit> getAttUnits() {
+		return attUnits;
+	}
+
+	public void setAttUnits(List<Unit> attUnits) {
+		this.attUnits = attUnits;
+	}
+
+	public IAttentionDao getAttentionDao() {
+		return attentionDao;
+	}
+	@Resource
+	public void setAttentionDao(IAttentionDao attentionDao) {
+		this.attentionDao = attentionDao;
+	}
+
+	public List<Attention> getAttentions() {
+		return attentions;
+	}
+
+	public void setAttentions(List<Attention> attentions) {
+		this.attentions = attentions;
+	}
+
 
 }

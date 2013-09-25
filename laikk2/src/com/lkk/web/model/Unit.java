@@ -54,7 +54,6 @@ public class Unit implements java.io.Serializable {
 	private String addr;
 	private String email;
 	private List<CustomCategory> customCategorys = new ArrayList<CustomCategory>();
-	
 	// Constructors
 
 	/** default constructor */
@@ -88,6 +87,7 @@ public class Unit implements java.io.Serializable {
 			mappedBy="unit",
 			targetEntity=CustomCategory.class
 	)
+	@NotFound(action = NotFoundAction.IGNORE)
 	public List<CustomCategory> getCustomCategorys() {
 		return customCategorys;
 	}
@@ -96,6 +96,7 @@ public class Unit implements java.io.Serializable {
 		this.customCategorys = customCategorys;
 	}
 	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "manager")

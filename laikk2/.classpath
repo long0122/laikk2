@@ -48,5 +48,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xwork-2.1.2.jar" sourcepath="C:/Documents and Settings/piress/.m2/repository/com/opensymphony/xwork/2.1.2/xwork-2.1.2-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xwork-core-2.1.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

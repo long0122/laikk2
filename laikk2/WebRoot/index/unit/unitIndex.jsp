@@ -41,7 +41,7 @@
       <li class="last"><a href="company-summary_on.html" class="dis_last"><div><img src="${basePath}index/images/icon_member12.png"></div>
         <p>基本信息</p>
         </a></li>
-        <li><a href="#" class="dis_first"><div><img src="${basePath}index/images/icon_member13.png"></div>
+        <li><a href="${basePath}main/unit!gotoAttentionAdd" class="dis_first"><div><img src="${basePath}index/images/icon_member13.png"></div>
         <p>添加关注</p>
         </a></li>
       <li><a href="company-customer.html"><div><img src="${basePath}index/images/icon_member14.png"></div>
