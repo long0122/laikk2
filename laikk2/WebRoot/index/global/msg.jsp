@@ -12,8 +12,10 @@
 	<!--  onLoad="setup()" -->
 	<body>
 		<div data-role="page" id="msgPage" class="page">
+		<!-- 
 		<a href="${basePath}" class="logo" style="margin-top: 15px;margin-bottom: -15px"><img src="${basePath}index/images/logo.png"></a>
-				<div data-role="header">
+		 -->
+		 		<div data-role="header">
 				<a data-ajax="false" href="${msg_url}"
 					data-rel="back"><img src="${basePath}index/images/back.png" />
 				</a>

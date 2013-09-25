@@ -61,8 +61,10 @@
 		<!-- 广告-->
 		<action name="ad" class="adIndex">
 			<result name="adAdd">/index/unit/adAdd.jsp</result>
+			<result name="adEdit">/index/unit/adEdit.jsp</result>
 			<result name="adCustomAdd">/index/unit/adCustomAdd.jsp</result>
 			<result name="adCustomEditList">/index/unit/adCustomEditList.jsp</result>
+			<result name="storageAdEditList">/index/unit/storageAdEditList.jsp</result>
 			<interceptor-ref name="myInterceptorStack"></interceptor-ref>
 		</action>
 	</package>

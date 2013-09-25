@@ -41,6 +41,8 @@ public class AdvertisementIndexAction extends BasicPageAction implements ModelDr
 	private ICustomCategoryDao customCategoryDao;
 	private List<CustomCategory> customCategoryList= new ArrayList<CustomCategory>();
 	private List<Advertisement> advertisementList = new ArrayList<Advertisement>();
+	private String adType;//1:普通商品 2：自定义商品
+	private Advertisement advertisement = new Advertisement();
 	private  static final String  FILR_URL = "uploadFile/advertisement/";
 	
 	/**
@@ -74,7 +76,7 @@ public class AdvertisementIndexAction extends BasicPageAction implements ModelDr
 				GlobalConstants.SESSION_USER_INDEX);
 		User user = null;
 		Unit unit = null;
-		String backUrl = basePath + "main/ad!gotoAdd";
+		String backUrl = basePath + "main/index";
 		if(user_==null){
 			MsgUtil.setReLoginMsg(request, backUrl);
 			return "indexMsg";
@@ -117,6 +119,164 @@ public class AdvertisementIndexAction extends BasicPageAction implements ModelDr
 		return "indexMsg";
 	}
 	
+	
+	/**
+	 * 跳转到编辑页面
+	 * @return
+	 * @throws Exception
+	 */
+	public String gotoEdit() throws Exception {
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		Object user_ =request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		Unit unit = null;
+		String backUrl = basePath + "main/index";
+		if(user_==null){
+			MsgUtil.setReLoginMsg(request, backUrl);
+			return "indexMsg";
+		}else{
+			unit = (Unit)request.getSession().getAttribute(
+					GlobalConstants.SESSION_UNIT_INDEX);
+		}
+		if(adInfo.getId()==null){
+			backUrl = basePath + "main/unit!gotoStorageEdit";
+			MsgUtil.setFialMsg(request, "获取ID失败。", backUrl);
+			return "indexMsg";
+		}
+		
+		advertisement = advertisementDao.findById(Integer.parseInt(adInfo.getId()));
+		
+		if("2".equals(adType)){
+			//custom ad
+			customCategoryList = customCategoryDao.findByUnitId(unit.getId());
+		}
+	
+		return "adEdit";
+	}
+	
+	
+	/**
+	 * 编辑
+	 * @return
+	 * @throws Exception
+	 */
+	public String edit() throws Exception {
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		Object user_ =request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		User user = null;
+		Unit unit = null;
+		String backUrl = basePath + "main/index";
+		if(user_==null){
+			MsgUtil.setReLoginMsg(request, backUrl);
+			return "indexMsg";
+		}else{
+			user = (User)user_;
+			unit = (Unit)request.getSession().getAttribute(
+					GlobalConstants.SESSION_UNIT_INDEX);
+		}
+		if(adInfo.getId()==null){
+			backUrl = basePath + "main/unit!gotoStorageEdit";
+			MsgUtil.setFialMsg(request, "获取ID失败。", backUrl);
+			return "indexMsg";
+		}
+		
+		Advertisement advertisement = advertisementDao.findById(Integer.parseInt(adInfo.getId()));
+		if(!advertisement.getUnit().getId().equals(unit.getId())){
+			MsgUtil.setFialMsg(request, "登录用户与该产品不匹配。", backUrl);
+			return "indexMsg";
+		}
+		
+		advertisement.setTitle(adInfo.getTitle());
+		advertisement.setContent(adInfo.getContent());
+		advertisement.setPrice(adInfo.getPrice());
+		advertisement.setPricePro(adInfo.getPricePro());
+		
+		// upload file
+		File pic = adInfo.getPicture();
+		String baseUrl = FILR_URL + user.getUsername() + "/";
+		if (pic != null && !"".equals(pic)) {
+			String picPath = FileTools.getFilePath(request, baseUrl,
+					pic, adInfo.getPictureFileName());
+			advertisement.setPicture(picPath);
+			System.out.print("-------picPath--------"
+					+ picPath);
+		}
+		
+		String customStorage = adInfo.getCustomStorage();
+		if (customStorage != null && !"".equals(customStorage)) {
+			if(!customStorage.equals(advertisement.getCustomCategory().getId())){
+				//set customStorag
+				CustomCategory cc = customCategoryDao.findById(Integer.parseInt(customStorage));
+				advertisement.setCustomCategory(cc);
+			}
+		}
+	
+		//set state
+		//advertisement.setState(GlobalConstants.STATE_3);
+		
+		//set time
+		//advertisement.setCreateTime(new Timestamp(new Date().getTime()));
+		
+//		advertisement.setUnit(unit);
+//		advertisement.setArea(user.getArea());
+//		advertisement.setCategory(user.getCategory());
+//		advertisement.setNumlook(0);
+		advertisementDao.update(advertisement);
+		
+		backUrl = basePath + "main/unit!gotoStorageEdit";
+		MsgUtil.setSuccessMsg(request, "商品修改成功！", backUrl);
+		return "indexMsg";
+	}
+	
+	/**
+	 * 删除
+	 * @return
+	 * @throws Exception
+	 */
+	public String del() throws Exception {
+		System.out.println("-----------del--------------");
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		Object user_ =request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+//		User user = null;
+		Unit unit = null;
+		String backUrl = basePath + "main/index";
+		if(user_==null){
+			MsgUtil.setReLoginMsg(request, backUrl);
+			return "indexMsg";
+		}else{
+//			user = (User)user_;
+			unit = (Unit)request.getSession().getAttribute(
+					GlobalConstants.SESSION_UNIT_INDEX);
+		}
+		if(adInfo.getId()==null){
+			backUrl = basePath + "main/unit!gotoStorageEdit";
+			MsgUtil.setFialMsg(request, "获取ID失败。", backUrl);
+			return "indexMsg";
+		}
+		
+		Advertisement advertisement = advertisementDao.findById(Integer.parseInt(adInfo.getId()));
+		if(advertisement==null){
+			MsgUtil.setFialMsg(request, "此商品已经不存在。", backUrl);
+			return "indexMsg";
+		}
+		if(!advertisement.getUnit().getId().equals(unit.getId())){
+			MsgUtil.setFialMsg(request, "登录用户与该产品不匹配。", backUrl);
+			return "indexMsg";
+		}
+		
+		advertisementDao.delete(advertisement);
+		
+		backUrl = basePath + "main/unit!gotoStorageEdit";
+		MsgUtil.setSuccessMsg(request, "商品删除成功！", backUrl);
+		return "indexMsg";
+	}
+	
+	
 	/**
 	 * 跳转到自定义商品录入界面
 	 * @return
@@ -154,7 +314,7 @@ public class AdvertisementIndexAction extends BasicPageAction implements ModelDr
 				GlobalConstants.SESSION_USER_INDEX);
 		User user = null;
 		Unit unit = null;
-		String backUrl = basePath + "main/ad!gotoCustomAdd";
+		String backUrl = basePath + "main/index";
 		if(user_==null){
 			MsgUtil.setReLoginMsg(request, backUrl);
 			return "indexMsg";
@@ -200,6 +360,9 @@ public class AdvertisementIndexAction extends BasicPageAction implements ModelDr
 		return "indexMsg";
 	}
 	
+	
+	
+	
 	/**
 	 * 根据自定义类别显示商品
 	 * @return
@@ -218,9 +381,35 @@ public class AdvertisementIndexAction extends BasicPageAction implements ModelDr
 		}
 		
 		//String customStorageId = adInfo.getCustomStorage();
-		advertisementList = advertisementDao.findAll(adInfo, 0, 6);
+		//advertisementList = advertisementDao.findAll(adInfo, 0, 6);
 		return "adCustomEditList";
 	}
+	
+	/**
+	 * 仓库商品编辑列表
+	 * @return
+	 * @throws Exception
+	 */
+	public String storageAdEditList() throws Exception {
+		Object basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH);
+		Object user_ =request.getSession().getAttribute(
+				GlobalConstants.SESSION_USER_INDEX);
+		String backUrl = basePath + "main/index";
+		Unit unit = null;
+		if(user_==null){
+			MsgUtil.setReLoginMsg(request, backUrl);
+			return "indexMsg";
+		}else{
+			unit = (Unit)request.getSession().getAttribute(
+					GlobalConstants.SESSION_UNIT_INDEX);
+		}
+		adInfo.setUnit(unit.getId().toString());
+		//String customStorageId = adInfo.getCustomStorage();
+		//advertisementList = advertisementDao.findAll(adInfo, 0, 6);
+		return "storageAdEditList";
+	}
+
 	
 	
 	/**
@@ -292,6 +481,22 @@ public class AdvertisementIndexAction extends BasicPageAction implements ModelDr
 
 	public void setAdvertisementList(List<Advertisement> advertisementList) {
 		this.advertisementList = advertisementList;
+	}
+
+	public String getAdType() {
+		return adType;
+	}
+
+	public void setAdType(String adType) {
+		this.adType = adType;
+	}
+
+	public Advertisement getAdvertisement() {
+		return advertisement;
+	}
+
+	public void setAdvertisement(Advertisement advertisement) {
+		this.advertisement = advertisement;
 	}
 
 

@@ -53,7 +53,7 @@
 							<h3>
 								<strong>在仓商品</strong><span> <c:if
 										test="${!empty advertisementList}">
-										<a href="#"><strong>点击查看更多 >></strong>
+										<a href="${basePath}main/ad!storageAdEditList" data-ajax="false"><strong>点击查看更多 >></strong>
 										</a>
 									</c:if>
 								</span>
@@ -62,9 +62,9 @@
 								<c:forEach items="${advertisementList}" var="ad">
 									<li>
 										${ad.title}
-										<span> <a href="#"><img
-													src="${basePath}index/images/icon_3.png">
-										</a> <a href="#"><img src="${basePath}index/images/icon_2.png">
+										<span> <a href="${basePath}main/ad!gotoEdit?adType=1&id=${ad.id}"><img
+													src="${basePath}index/images/icon_2.png">
+										</a> <a href="javascript:window.location.href='${basePath}main/ad!del?id=${ad.id}'"  onclick="return confirm('您确定删除吗?')"><img src="${basePath}index/images/icon_3.png">
 										</a> </span>
 									</li>
 								</c:forEach>

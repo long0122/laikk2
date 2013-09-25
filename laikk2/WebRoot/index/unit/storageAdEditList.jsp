@@ -13,7 +13,7 @@
 		<div data-role="page" id="adCustomEditListPage" class="com_pany page" data-dom-cache="false">
 		<script type="text/javascript">
 		$(document).ready(function() {
-			loadData(${adInfo.customStorage});
+			loadData(${adInfo.unit});
 		});
 		/*
 		$("#adCustomEditListPage").live("pageshow", function() {
@@ -26,8 +26,8 @@
 				var startNum = -1;
 				var count = -1;
 				function loadData(value){
-					var url = "ajax!getAllAdListByCustomCategory";
-					var params = {customCategoryId:value,startNum:startNum,count:count};
+					var url = "ajax!getAllAdListByState";
+					var params = {unitId:value,adState:0,startNum:startNum,count:count};
 					$.ajax({
 						type : "POST",
 						url : url,
@@ -94,7 +94,7 @@
 				
 				
 				<div class="res_btn" id="moreDiv">
-									<input type="button" value="加载更多" onclick="loadData(${adInfo.customStorage})"> 
+									<input type="button" value="加载更多" onclick="loadData(${adInfo.unit})"> 
 								</div>
 			</div>
 			

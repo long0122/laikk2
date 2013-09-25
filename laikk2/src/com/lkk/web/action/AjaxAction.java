@@ -51,6 +51,8 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 	private String cityId;
 	private String customStorageName;
 	private String customStorageId;
+	private String unitId;
+	private String adState;
 	private ICustomCategoryDao customCategoryDao;
 	private String customCategoryId;
 	private IAdvertisementDao advertisementDao;
@@ -291,7 +293,72 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 				str += "<li>";
 				str += "<a href='#'><span><img src=\""+ ad.getPicture()+"\" onerror=\"errpic(this)\" /> <em>"+ad.getTitle()+"</em></span>";
 				str += "<div class=\"product_list\">";
-				str += "<span>编辑 删除</span>";
+				str += "<span><a href='"+basePath+"main/ad!gotoEdit?adType=2&id="+ ad.getId()+"'>编辑</a> " +
+						"<a href=\"javascript:window.location.href='"+basePath+"main/ad!del?id="+ ad.getId()+"'\"  onclick=\"return confirm('您确定删除吗?')\">删除</a></span>";
+				str += "</div>";
+				str += "<div class=\"cl\"></div>";
+				str += "</a>";
+				str += "</li>";
+				
+			}
+		} else {
+			str += "<li>";
+			str += "<strong>暂无相关信息</strong>";
+			str += "</li>";
+		}
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("str", str);
+
+		// 分页
+		if (startNum == -1) {
+			startNum = 0;
+		}
+
+		if (count == -1) {
+			count = advertisementDao.countAll(adInfo);
+		}
+		if (count >= showSize) {
+			startNum = startNum + showSize;
+		} else {
+			startNum = (int) count;
+		}
+		map.put("startNum", String.valueOf(startNum));
+		map.put("count", String.valueOf(count));
+
+		JSONObject jo = JSONObject.fromObject(map);
+		this.result = jo.toString();
+		return SUCCESS;
+	}
+	
+	/**
+	 * 根据状态获取商品
+	 * @return
+	 * @throws Exception
+	 */
+	public String getAllAdListByState() throws Exception {
+		String basePath = request.getSession().getAttribute(
+				GlobalConstants.SESSION_BASEPATH).toString();
+		AdvertisementInfo adInfo = new AdvertisementInfo();
+		adInfo.setUnit(unitId);
+		adInfo.setState(adState);
+		List<Advertisement> adList = advertisementDao.findAll(adInfo , startNum, showSize);
+		
+		String str = "";
+		if (adList != null && adList.size() > 0) {
+			for (Advertisement ad : adList) {
+				String pic = ad.getPicture();
+				if (pic == null || "".equals(pic)) {
+					ad.setPicture(basePath + GlobalConstants.noPic);
+				} else if (!pic.contains("http")) {
+					ad.setPicture(basePath + pic);
+				}
+				
+				str += "<li>";
+				str += "<a href='#'><span><img src=\""+ ad.getPicture()+"\" onerror=\"errpic(this)\" /> <em>"+ad.getTitle()+"</em></span>";
+				str += "<div class=\"product_list\">";
+				str += "<span><a href='"+basePath+"main/ad!gotoEdit?adType=1&id="+ ad.getId()+"'>编辑</a> " +
+						"<a href=\"javascript:window.location.href='"+basePath+"main/ad!del?id="+ ad.getId()+"'\"  onclick=\"return confirm('您确定删除吗?')\">删除</a></span>";
 				str += "</div>";
 				str += "<div class=\"cl\"></div>";
 				str += "</a>";
@@ -451,6 +518,22 @@ public class AjaxAction extends BasicAction implements ModelDriven {
 
 	public void setCustomStorageId(String customStorageId) {
 		this.customStorageId = customStorageId;
+	}
+
+	public String getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
+	}
+
+	public String getAdState() {
+		return adState;
+	}
+
+	public void setAdState(String adState) {
+		this.adState = adState;
 	}
 
 }
